@@ -37,7 +37,19 @@ def vending_machine():
 
 @vending_bp.route('/vending-machine/delete')
 def delete_vending_machine():
-    pass
+
+    from app import mysql
+
+    id = request.form['id']
+    
+    cur = mysql.connection.cursor()
+    query_statement = f"DELETE FROM vending_machine WHERE vending_machine_id = {id}"
+
+    cur.execute(query_statement)
+    mysql.connection.commit()
+    cur.close()
+
+    return all_vending_machines()
 
 @vending_bp.route('/vending-machine/create', methods=['GET', 'POST'])
 def create_vending_machine():
