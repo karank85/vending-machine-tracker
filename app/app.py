@@ -1,12 +1,12 @@
-from flask import Flask, render_template, request, redirect, flash, session, Blueprint
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, render_template
 from flask_mysqldb import MySQL
 import yaml
+
 from products import product_bp
 
 app = Flask(__name__)
 
-app.register_blueprint(product_bp, url_prefix="/")
+app.register_blueprint(product_bp)
 
 cred = yaml.load(open('../cred.yaml'), Loader=yaml.Loader)
 app.config['MYSQL_HOST'] = cred['mysql_host']
