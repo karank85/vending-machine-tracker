@@ -1,8 +1,22 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 
 product_bp = Blueprint('product', __name__, url_prefix="/")
 
 from app import mysql
+
+@product_bp.route("/product/all", methods=['GET'])
+def all_products():
+    cur = mysql.connection.cursor()
+
+    query_statement = f"SELECT * FROM products"
+    output_rows = cur.execute(query_statement)
+
+    if output_rows > 0:
+        products = cur.fetchall()
+        cur.close()
+        return jsonify(products)
+    return None
+
 
 @product_bp.route("/product", methods=['GET'])
 def product():
@@ -23,7 +37,16 @@ def delete_product():
 
 @product_bp.route('/product/create', methods=['GET', 'POST'])
 def create_product():
-    pass
+    
+    name = request.form['name']
+    price = request.form['price']
+
+    cur = mysql.connection.cursor()
+    query_statement = f"INSERT INTO products(product_name, price) VALUES('{name}',{price})"
+
+    cur.execute(query_statement)
+
+    return all_products()
 
 @product_bp.route('/product/edit', methods=['POST'])
 def edit_product():
@@ -35,6 +58,9 @@ def edit_product():
     cur = mysql.connection.cursor()
 
     query_statement = f"UPDATE products SET product_name = '{name}', price = {price} WHERE product_id={id}"
-    cur.execute(query_statement)
-    
-    return product()
+    output = cur.execute(query_statement)
+
+    if output > 0:
+        cur.close()
+        return product()
+    return jsonify(None)
