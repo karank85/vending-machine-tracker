@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 
-product_bp = Blueprint('product', __name__, url_prefix="/")
+product_bp = Blueprint('product', __name__, url_prefix='/')
 
 from app import mysql
 
@@ -28,12 +28,22 @@ def product():
     
     if output_rows > 0:
         pdt = cur.fetchone()
-        return pdt
+        return jsonify(pdt)
     return None
 
 @product_bp.route('/product/delete')
 def delete_product():
-    pass
+
+    id = request.form['id']
+    
+    cur = mysql.connection.cursor()
+    query_statement = f"DELETE FROM products WHERE product_id = {id}"
+
+    cur.execute(query_statement)
+    mysql.connection.commit()
+    cur.close()
+
+    return all_products()
 
 @product_bp.route('/product/create', methods=['GET', 'POST'])
 def create_product():
@@ -45,6 +55,8 @@ def create_product():
     query_statement = f"INSERT INTO products(product_name, price) VALUES('{name}',{price})"
 
     cur.execute(query_statement)
+    mysql.connection.commit()
+    cur.close()
 
     return all_products()
 
