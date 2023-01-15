@@ -1,12 +1,27 @@
-from flask import Flask, render_template, request, redirect, flash, session
-from flask_mysqldb import MySQL
+from flask import Blueprint, request
 
-app = Flask(__name__)
+product_bp = Blueprint('product', __name__)
 
-@app.route('/product/delete/<int:id>')
+from app import mysql
+
+@product_bp.route("/product", methods=['GET'])
+def product():
+    id = request.form['id']
+    print(id)
+    
+    cur = mysql.connection.cursor()
+    query_statement = f"SELECT * FROM products WHERE product_id={id}"
+    output_rows = cur.execute(query_statement)
+    
+    if output_rows > 0:
+        pdt = cur.fetchone()
+        return pdt
+    return None
+
+@product_bp.route('/product/delete')
 def delete_product(id):
     pass
 
-@app.route('/product/create/', methods=['GET', 'POST'])
+@product_bp.route('/product/create', methods=['GET', 'POST'])
 def create_product():
     pass
