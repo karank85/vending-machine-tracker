@@ -15,7 +15,7 @@ def all_products():
         products = cur.fetchall()
         cur.close()
         return jsonify(products)
-    return None
+    return jsonify(None)
 
 
 @product_bp.route("/product", methods=['GET'])

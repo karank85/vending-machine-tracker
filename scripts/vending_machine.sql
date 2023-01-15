@@ -8,7 +8,7 @@ create table products
 
 create table vending_machine
 (
-    vending_machine_id int          not null
+    vending_machine_id int auto_increment
         primary key,
     location           varchar(255) not null
 );
