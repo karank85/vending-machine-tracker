@@ -69,4 +69,18 @@ def create_vending_machine():
 
 @vending_bp.route('/vending-machine/edit', methods=['POST'])
 def edit_vending_machine():
-    pass
+
+    from app import mysql
+
+    id = request.form['id']
+    location = request.form['location']
+
+    cur = mysql.connection.cursor()
+
+    query_statement = f"UPDATE vending_machine SET location = '{location}' WHERE vending_machine_id={id}"
+    output = cur.execute(query_statement)
+
+    if output > 0:
+        cur.close()
+        return all_vending_machines()
+    return jsonify(None)
