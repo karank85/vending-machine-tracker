@@ -53,7 +53,19 @@ def delete_vending_machine():
 
 @vending_bp.route('/vending-machine/create', methods=['GET', 'POST'])
 def create_vending_machine():
-    pass
+
+    from app import mysql
+
+    location = request.form['location']
+
+    cur = mysql.connection.cursor()
+    query_statement = f"INSERT INTO vending_machine(location) VALUES('{location}')"
+
+    cur.execute(query_statement)
+    mysql.connection.commit()
+    cur.close()
+
+    return all_vending_machines()
 
 @vending_bp.route('/vending-machine/edit', methods=['POST'])
 def edit_vending_machine():
