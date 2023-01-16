@@ -39,9 +39,25 @@ def listing():
 
 @listing_bp.route('/listing/delete')
 def delete_listing():
-    pass
+
+    from app import mysql
+
+    id = request.form['id']
+    
+    cur = mysql.connection.cursor()
+    query_statement = f"DELETE FROM listing WHERE listing_id = {id}"
+
+    cur.execute(query_statement)
+    mysql.connection.commit()
+    cur.close()
+
+    return all_listing()
 
 @listing_bp.route('/listing/create', methods=['GET', 'POST'])
 def create_listing():
+    pass
+
+@listing_bp.route('/listing/edit', methods=['POST'])
+def edit_listing():
     pass
 
