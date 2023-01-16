@@ -6,9 +6,11 @@ app = Flask(__name__)
 
 from products import product_bp
 from vending_machines import vending_bp
+from listing import listing_bp
 
 app.register_blueprint(product_bp)
 app.register_blueprint(vending_bp)
+app.register_blueprint(listing_bp)
 
 cred = yaml.load(open('../cred.yaml'), Loader=yaml.Loader)
 app.config['MYSQL_HOST'] = cred['mysql_host']

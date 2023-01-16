@@ -1,13 +1,47 @@
-from flask import Flask, render_template, request, redirect, flash, session
-from flask_mysqldb import MySQL
+from flask import Blueprint, request, jsonify
 
-app = Flask(__name__)
+listing_bp = Blueprint('listing', __name__, url_prefix='/')
 
-@app.route('/listing/delete/<int:id>')
-def delete_listing(id):
+
+
+@listing_bp.route('listing/all')
+def all_listing():
+
+    from app import mysql
+
+    cur = mysql.connection.cursor()
+
+    query_statement = f"SELECT * FROM listing"
+    output_rows = cur.execute(query_statement)
+
+    if output_rows > 0:
+        vending_machines = cur.fetchall()
+        cur.close()
+        return jsonify(vending_machines)
+    return jsonify(None)
+
+@listing_bp.route("/listing", methods=['GET'])
+def listing():
+
+    from app import mysql
+
+    id = request.form['id']
+    
+    cur = mysql.connection.cursor()
+    query_statement = f"SELECT * FROM listing WHERE listing_id={id}"
+    output_rows = cur.execute(query_statement)
+    
+    if output_rows > 0:
+        ls = cur.fetchone()
+        return jsonify(ls)
+    return None
+
+
+@listing_bp.route('/listing/delete')
+def delete_listing():
     pass
 
-@app.route('/listing/create/', methods=['GET', 'POST'])
+@listing_bp.route('/listing/create', methods=['GET', 'POST'])
 def create_listing():
     pass
 
