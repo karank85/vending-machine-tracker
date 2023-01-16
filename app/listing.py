@@ -55,7 +55,23 @@ def delete_listing():
 
 @listing_bp.route('/listing/create', methods=['GET', 'POST'])
 def create_listing():
-    pass
+    
+    from app import mysql
+
+    vending_machine_id = request.form['vending_machine_id']
+    product_id = request.form['product_id']
+    quantity = request.form['quantity']
+
+    cur = mysql.connection.cursor()
+    query_statement = f"INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES({product_id},{vending_machine_id},{quantity})"
+
+    cur.execute(query_statement)
+    mysql.connection.commit()
+
+    cur.close()
+
+    return all_listing()
+
 
 @listing_bp.route('/listing/edit', methods=['POST'])
 def edit_listing():
