@@ -2,8 +2,6 @@ from flask import Blueprint, request, jsonify
 
 listing_bp = Blueprint('listing', __name__, url_prefix='/')
 
-
-
 @listing_bp.route('listing/all')
 def all_listing():
 
@@ -36,6 +34,21 @@ def listing():
         return jsonify(ls)
     return None
 
+@listing_bp.route('/listing/buy', methods=['POST'])
+def purchase_listing():
+
+    from app import mysql
+
+    id = request.form['id']
+    
+    cur = mysql.connection.cursor()
+    query_statement = f"UPDATE listing SET quantity = quantity - 1 WHERE listing_id = {id}"
+
+    cur.execute(query_statement)
+    mysql.connection.commit()
+    cur.close()
+
+    return listing()
 
 @listing_bp.route('/listing/delete')
 def delete_listing():
