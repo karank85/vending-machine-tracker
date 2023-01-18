@@ -2,18 +2,17 @@ from flask import Blueprint, request, jsonify
 
 listing_bp = Blueprint('listing', __name__, url_prefix='/')
 
-def import_func():
-    from app import mysql
-    return mysql
+def import_fun():
+    from util import run_sql_script
+    return run_sql_script
 
 @listing_bp.route('listing/all')
 def all_listing():
 
-    mysql = import_func()
-    cur = mysql.connection.cursor()
+    rqs = import_fun()
 
-    query_statement = f"SELECT * FROM listing"
-    output_rows = cur.execute(query_statement)
+
+    output_rows, mysql, cur = rqs(f"SELECT * FROM listing")
 
     if output_rows > 0:
         vending_machines = cur.fetchall()
@@ -24,30 +23,26 @@ def all_listing():
 @listing_bp.route("/listing", methods=['GET'])
 def listing():
 
-    mysql = import_func()
+    rqs = import_fun()
 
     id = request.form['id']
     
-    cur = mysql.connection.cursor()
-    query_statement = f"SELECT * FROM listing WHERE listing_id={id}"
-    output_rows = cur.execute(query_statement)
+    output_rows, mysql, cur = rqs(f"SELECT * FROM listing WHERE listing_id={id}")
     
     if output_rows > 0:
         ls = cur.fetchone()
         return jsonify(ls)
-    return None
+    return jsonify(None)
 
 @listing_bp.route('/listing/buy', methods=['POST'])
 def purchase_listing():
 
-    mysql = import_func()
+    rqs = import_fun()
 
     id = request.form['id']
     
-    cur = mysql.connection.cursor()
-    query_statement = f"UPDATE listing SET quantity = quantity - 1 WHERE listing_id = {id}"
+    output_rows, mysql, cur = rqs(f"UPDATE listing SET quantity = quantity - 1 WHERE listing_id = {id}")
 
-    cur.execute(query_statement)
     mysql.connection.commit()
     cur.close()
 
@@ -56,14 +51,13 @@ def purchase_listing():
 @listing_bp.route('/listing/delete')
 def delete_listing():
 
-    mysql = import_func()
+    rqs = import_fun()
+
 
     id = request.form['id']
     
-    cur = mysql.connection.cursor()
-    query_statement = f"DELETE FROM listing WHERE listing_id = {id}"
+    output_rows, mysql, cur = rqs(f"DELETE FROM listing WHERE listing_id = {id}")
 
-    cur.execute(query_statement)
     mysql.connection.commit()
     cur.close()
 
@@ -71,17 +65,15 @@ def delete_listing():
 
 @listing_bp.route('/listing/create', methods=['GET', 'POST'])
 def create_listing():
-    
-    mysql = import_func()
 
+    rqs = import_fun()
+    
     vending_machine_id = request.form['vending_machine_id']
     product_id = request.form['product_id']
     quantity = request.form['quantity']
 
-    cur = mysql.connection.cursor()
-    query_statement = f"INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES({product_id},{vending_machine_id},{quantity})"
+    output_rows, mysql, cur = rqs(f"INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES({product_id},{vending_machine_id},{quantity})")
 
-    cur.execute(query_statement)
     mysql.connection.commit()
 
     cur.close()
@@ -91,19 +83,20 @@ def create_listing():
 
 @listing_bp.route('/listing/edit', methods=['POST'])
 def edit_listing():
+
+    rqs = import_fun()
     
-    mysql = import_func()
 
     id = request.form['id']
     vending_machine_id = request.form['vending_machine_id']
     product_id = request.form['product_id']
     quantity = request.form['quantity']
 
-    cur = mysql.connection.cursor()
-    query_statement = f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, quantity = {quantity} WHERE listing_id={id}"
-    output = cur.execute(query_statement)
 
-    if output > 0:
+    output_rows, mysql, cur = rqs(f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, quantity = {quantity} WHERE listing_id={id}")
+
+
+    if output_rows > 0:
         cur.close()
         return listing()
     return jsonify(None)

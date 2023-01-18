@@ -2,14 +2,17 @@ from flask import Blueprint, request, jsonify
 
 product_bp = Blueprint('product', __name__, url_prefix='/')
 
-from app import mysql
+def import_fun():
+    from util import run_sql_script
+    return run_sql_script
+
 
 @product_bp.route("/product/all", methods=['GET'])
 def all_products():
-    cur = mysql.connection.cursor()
 
-    query_statement = f"SELECT * FROM products"
-    output_rows = cur.execute(query_statement)
+    rqs = import_fun()
+
+    output_rows, mysql, cur = rqs(f"SELECT * FROM products")
 
     if output_rows > 0:
         products = cur.fetchall()
@@ -20,26 +23,27 @@ def all_products():
 
 @product_bp.route("/product", methods=['GET'])
 def product():
+
+    rqs = import_fun()
+
     id = request.form['id']
     
-    cur = mysql.connection.cursor()
-    query_statement = f"SELECT * FROM products WHERE product_id={id}"
-    output_rows = cur.execute(query_statement)
+    output_rows, mysql, cur = rqs(f"SELECT * FROM products WHERE product_id={id}")
     
     if output_rows > 0:
         pdt = cur.fetchone()
         return jsonify(pdt)
-    return None
+    return jsonify(None)
 
 @product_bp.route('/product/delete')
 def delete_product():
 
+    rqs = import_fun()
+
     id = request.form['id']
     
-    cur = mysql.connection.cursor()
-    query_statement = f"DELETE FROM products WHERE product_id = {id}"
+    output_rows, mysql, cur = rqs(f"DELETE FROM products WHERE product_id = {id}")
 
-    cur.execute(query_statement)
     mysql.connection.commit()
     cur.close()
 
@@ -47,14 +51,14 @@ def delete_product():
 
 @product_bp.route('/product/create', methods=['GET', 'POST'])
 def create_product():
+
+    rqs = import_fun()
     
     name = request.form['name']
     price = request.form['price']
 
-    cur = mysql.connection.cursor()
-    query_statement = f"INSERT INTO products(product_name, price) VALUES('{name}',{price})"
+    output_rows, mysql, cur = rqs(f"INSERT INTO products(product_name, price) VALUES('{name}',{price})")
 
-    cur.execute(query_statement)
     mysql.connection.commit()
     cur.close()
 
@@ -63,14 +67,13 @@ def create_product():
 @product_bp.route('/product/edit', methods=['POST'])
 def edit_product():
 
+    rqs = import_fun()
+
     id = request.form['id']
     name = request.form['name']
     price = request.form['price']
 
-    cur = mysql.connection.cursor()
-
-    query_statement = f"UPDATE products SET product_name = '{name}', price = {price} WHERE product_id={id}"
-    output = cur.execute(query_statement)
+    (output, mysql, cur) = rqs(f"UPDATE products SET product_name = '{name}', price = {price} WHERE product_id={id}")
 
     if output > 0:
         cur.close()

@@ -2,19 +2,17 @@ from flask import Blueprint, request, jsonify
 
 vending_bp = Blueprint('vending', __name__, url_prefix='/')
 
-def import_func():
-    from app import mysql
-    return mysql
+def import_fun():
+    from util import run_sql_script
+    return run_sql_script
+
 
 @vending_bp.route("/vending-machine/all", methods=['GET'])
 def all_vending_machines():
 
-    mysql = import_func()
+    rqs = import_fun()
 
-    cur = mysql.connection.cursor()
-
-    query_statement = f"SELECT * FROM vending_machine"
-    output_rows = cur.execute(query_statement)
+    output_rows, mysql, cur = rqs(f"SELECT * FROM vending_machine")
 
     if output_rows > 0:
         vending_machines = cur.fetchall()
@@ -25,15 +23,14 @@ def all_vending_machines():
 @vending_bp.route("/vending-machine", methods=['GET'])
 def vending_machine():
 
-    mysql = import_func()
+    rqs = import_fun()
+
 
     id = request.form['id']
     
-    cur = mysql.connection.cursor()
-    query_statement = f"SELECT * FROM vending_machine WHERE vending_machine_id={id}"
-    output_rows = cur.execute(query_statement)
+    output, mysql, cur = rqs(f"SELECT * FROM vending_machine WHERE vending_machine_id={id}")
     
-    if output_rows > 0:
+    if output > 0:
         vm = cur.fetchone()
         return jsonify(vm)
     return None
@@ -41,14 +38,12 @@ def vending_machine():
 @vending_bp.route('/vending-machine/delete')
 def delete_vending_machine():
 
-    mysql = import_func()
+    rqs = import_fun()
 
     id = request.form['id']
     
-    cur = mysql.connection.cursor()
-    query_statement = f"DELETE FROM vending_machine WHERE vending_machine_id = {id}"
+    output, mysql, cur = rqs(f"DELETE FROM vending_machine WHERE vending_machine_id = {id}")
 
-    cur.execute(query_statement)
     mysql.connection.commit()
     cur.close()
 
@@ -57,14 +52,13 @@ def delete_vending_machine():
 @vending_bp.route('/vending-machine/create', methods=['GET', 'POST'])
 def create_vending_machine():
 
-    mysql = import_func()
+    rqs = import_fun()
+
 
     location = request.form['location']
 
-    cur = mysql.connection.cursor()
-    query_statement = f"INSERT INTO vending_machine(location) VALUES('{location}')"
+    output, mysql, cur = rqs(f"INSERT INTO vending_machine(location) VALUES('{location}')")
 
-    cur.execute(query_statement)
     mysql.connection.commit()
     cur.close()
 
@@ -73,15 +67,13 @@ def create_vending_machine():
 @vending_bp.route('/vending-machine/edit', methods=['POST'])
 def edit_vending_machine():
 
-    mysql = import_func()
+    rqs = import_fun()
+
 
     id = request.form['id']
     location = request.form['location']
 
-    cur = mysql.connection.cursor()
-
-    query_statement = f"UPDATE vending_machine SET location = '{location}' WHERE vending_machine_id={id}"
-    output = cur.execute(query_statement)
+    output, mysql ,cur = rqs(f"UPDATE vending_machine SET location = '{location}' WHERE vending_machine_id={id}")
 
     if output > 0:
         cur.close()
