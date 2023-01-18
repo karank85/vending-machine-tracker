@@ -2,11 +2,14 @@ from flask import Blueprint, request, jsonify
 
 listing_bp = Blueprint('listing', __name__, url_prefix='/')
 
+def import_func():
+    from app import mysql
+    return mysql
+
 @listing_bp.route('listing/all')
 def all_listing():
 
-    from app import mysql
-
+    mysql = import_func()
     cur = mysql.connection.cursor()
 
     query_statement = f"SELECT * FROM listing"
@@ -21,7 +24,7 @@ def all_listing():
 @listing_bp.route("/listing", methods=['GET'])
 def listing():
 
-    from app import mysql
+    mysql = import_func()
 
     id = request.form['id']
     
@@ -37,7 +40,7 @@ def listing():
 @listing_bp.route('/listing/buy', methods=['POST'])
 def purchase_listing():
 
-    from app import mysql
+    mysql = import_func()
 
     id = request.form['id']
     
@@ -53,7 +56,7 @@ def purchase_listing():
 @listing_bp.route('/listing/delete')
 def delete_listing():
 
-    from app import mysql
+    mysql = import_func()
 
     id = request.form['id']
     
@@ -69,7 +72,7 @@ def delete_listing():
 @listing_bp.route('/listing/create', methods=['GET', 'POST'])
 def create_listing():
     
-    from app import mysql
+    mysql = import_func()
 
     vending_machine_id = request.form['vending_machine_id']
     product_id = request.form['product_id']
@@ -89,7 +92,7 @@ def create_listing():
 @listing_bp.route('/listing/edit', methods=['POST'])
 def edit_listing():
     
-    from app import mysql
+    mysql = import_func()
 
     id = request.form['id']
     vending_machine_id = request.form['vending_machine_id']
