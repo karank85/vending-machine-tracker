@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_mysqldb import MySQL
-import yaml
+from credentials import *
 
 app = Flask(__name__)
 
@@ -12,11 +12,10 @@ app.register_blueprint(product_bp)
 app.register_blueprint(vending_bp)
 app.register_blueprint(listing_bp)
 
-cred = yaml.load(open('../cred.yaml'), Loader=yaml.Loader)
-app.config['MYSQL_HOST'] = cred['mysql_host']
-app.config['MYSQL_USER'] = cred['mysql_user']
-app.config['MYSQL_PASSWORD'] = cred['mysql_password']
-app.config['MYSQL_DB'] = cred['mysql_db']
+app.config['MYSQL_HOST'] = mysql_host
+app.config['MYSQL_USER'] = mysql_user
+app.config['MYSQL_PASSWORD'] = mysql_password
+app.config['MYSQL_DB'] = mysql_db
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
