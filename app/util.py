@@ -1,4 +1,4 @@
-from app import mysql 
+from __init__ import mysql 
 
 def run_sql_script(query):
 

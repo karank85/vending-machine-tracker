@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_mysqldb import MySQL
-from credentials import *
+from config.credentials import *
 
 app = Flask(__name__)
 
