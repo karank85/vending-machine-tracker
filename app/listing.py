@@ -11,7 +11,6 @@ def all_listing():
 
     rqs = import_fun()
 
-
     output_rows, mysql, cur = rqs(f"SELECT * FROM listing")
 
     if output_rows > 0:
@@ -86,7 +85,6 @@ def edit_listing():
 
     rqs = import_fun()
     
-
     id = request.form['id']
     vending_machine_id = request.form['vending_machine_id']
     product_id = request.form['product_id']
