@@ -10,7 +10,8 @@ create table vending_machine
 (
     vending_machine_id int auto_increment
         primary key,
-    location           varchar(255) not null
+    location           varchar(255) not null,
+    name               varchar(255) not null
 );
 
 create table listing

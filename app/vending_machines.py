@@ -54,10 +54,10 @@ def create_vending_machine():
 
     rqs = import_fun()
 
-
+    name = request.form['name']
     location = request.form['location']
 
-    output, mysql, cur = rqs(f"INSERT INTO vending_machine(location) VALUES('{location}')")
+    output, mysql, cur = rqs(f"INSERT INTO vending_machine(location, name) VALUES('{location}','{name}')")
 
     mysql.connection.commit()
     cur.close()
@@ -72,8 +72,9 @@ def edit_vending_machine():
 
     id = request.form['id']
     location = request.form['location']
+    name = request.form['name']
 
-    output, mysql ,cur = rqs(f"UPDATE vending_machine SET location = '{location}' WHERE vending_machine_id={id}")
+    output, mysql ,cur = rqs(f"UPDATE vending_machine SET location = '{location}', name = '{name}' WHERE vending_machine_id={id}")
 
     if output > 0:
         cur.close()

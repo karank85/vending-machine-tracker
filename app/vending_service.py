@@ -6,8 +6,8 @@ def import_fun():
     from util import run_sql_script
     return run_sql_script
 
-@vending_service_bp.route('/service/vending-product', methods=['GET'])
-def products_from_vending_machine():
+@vending_service_bp.route('/service/stock', methods=['GET'])
+def vending_machine_stock():
 
     rqs = import_fun()
 
