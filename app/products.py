@@ -75,6 +75,8 @@ def edit_product():
 
     (output, mysql, cur) = rqs(f"UPDATE products SET product_name = '{name}', price = {price} WHERE product_id={id}")
 
+    mysql.connection.commit()
+
     if output > 0:
         cur.close()
         return product()

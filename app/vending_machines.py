@@ -76,6 +76,8 @@ def edit_vending_machine():
 
     output, mysql ,cur = rqs(f"UPDATE vending_machine SET location = '{location}', name = '{name}' WHERE vending_machine_id={id}")
 
+    mysql.connection.commit()
+
     if output > 0:
         cur.close()
         return all_vending_machines()

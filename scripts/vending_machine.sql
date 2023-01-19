@@ -16,11 +16,10 @@ create table vending_machine
 
 create table listing
 (
-    listing_id         int auto_increment
-        primary key,
     product_id         int not null,
     vending_machine_id int not null,
     quantity           int not null,
+    primary key (product_id, vending_machine_id),
     constraint product_id
         foreign key (product_id) references products (product_id),
     constraint vending_machine_id

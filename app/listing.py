@@ -24,9 +24,10 @@ def listing():
 
     rqs = import_fun()
 
-    id = request.form['id']
+    vending_machine_id = request.form['vending_machine_id']
+    product_id = request.form['product_id']
     
-    output_rows, mysql, cur = rqs(f"SELECT * FROM listing WHERE listing_id={id}")
+    output_rows, mysql, cur = rqs(f"SELECT * FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
     
     if output_rows > 0:
         ls = cur.fetchone()
@@ -38,9 +39,10 @@ def purchase_listing():
 
     rqs = import_fun()
 
-    id = request.form['id']
+    vending_machine_id = request.form['vending_machine_id']
+    product_id = request.form['product_id']
     
-    output_rows, mysql, cur = rqs(f"UPDATE listing SET quantity = quantity - 1 WHERE listing_id = {id}")
+    output_rows, mysql, cur = rqs(f"UPDATE listing SET quantity = quantity - 1 WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
 
     mysql.connection.commit()
     cur.close()
@@ -53,9 +55,10 @@ def delete_listing():
     rqs = import_fun()
 
 
-    id = request.form['id']
+    vending_machine_id = request.form['vending_machine_id']
+    product_id = request.form['product_id']
     
-    output_rows, mysql, cur = rqs(f"DELETE FROM listing WHERE listing_id = {id}")
+    output_rows, mysql, cur = rqs(f"DELETE FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
 
     mysql.connection.commit()
     cur.close()
@@ -85,13 +88,14 @@ def edit_listing():
 
     rqs = import_fun()
     
-    id = request.form['id']
     vending_machine_id = request.form['vending_machine_id']
     product_id = request.form['product_id']
     quantity = request.form['quantity']
 
 
-    output_rows, mysql, cur = rqs(f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, quantity = {quantity} WHERE listing_id={id}")
+    output_rows, mysql, cur = rqs(f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, quantity = {quantity} WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
+
+    mysql.connection.commit()
 
 
     if output_rows > 0:
