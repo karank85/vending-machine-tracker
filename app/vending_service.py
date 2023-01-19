@@ -6,7 +6,7 @@ def import_fun():
     from util import run_sql_script
     return run_sql_script
 
-@vending_service_bp.route('/service/stock', methods=['GET'])
+@vending_service_bp.route('/service/machine-stock', methods=['GET'])
 def vending_machine_stock():
 
     rqs = import_fun()
@@ -20,4 +20,19 @@ def vending_machine_stock():
         cur.close()
         return jsonify(products)
     return jsonify(None)
+
+@vending_service_bp.route('/service/location-machine', methods=['GET'])
+def location_vending_machine():
+    rqs = import_fun()
+
+    location = request.form['location']
+
+    output_rows, mysql, cur = rqs(f"SELECT vending_machine_id, name FROM vending_machine WHERE location = '{location}'")
+
+    if output_rows > 0:
+        products = cur.fetchall()
+        cur.close()
+        return jsonify(products)
+    return jsonify(None)
+
 
