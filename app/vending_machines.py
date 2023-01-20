@@ -30,15 +30,17 @@ def vending_machine():
 
     rqs = import_fun()
 
-
-    id = request.form['id']
-    
-    output, mysql, cur = rqs(f"SELECT * FROM vending_machine WHERE vending_machine_id={id}")
-    
-    if output > 0:
-        vm = cur.fetchone()
-        return jsonify(vm)
-    return None
+    try:
+        id = request.form['id']
+        
+        output, mysql, cur = rqs(f"SELECT * FROM vending_machine WHERE vending_machine_id={id}")
+        
+        if output > 0:
+            vm = cur.fetchone()
+            return jsonify(vm)
+        return jsonify(None)
+    except:
+        return jsonify(None)
 
 '''
 Delete a vending machine from the database
@@ -47,15 +49,17 @@ Delete a vending machine from the database
 def delete_vending_machine():
 
     rqs = import_fun()
+    try:
+        id = request.form['id']
+        
+        output, mysql, cur = rqs(f"DELETE FROM vending_machine WHERE vending_machine_id = {id}")
 
-    id = request.form['id']
-    
-    output, mysql, cur = rqs(f"DELETE FROM vending_machine WHERE vending_machine_id = {id}")
+        mysql.connection.commit()
+        cur.close()
 
-    mysql.connection.commit()
-    cur.close()
-
-    return all_vending_machines()
+        return all_vending_machines()
+    except:
+        return jsonify(None)
 
 '''
 Create a new vending machine provided with the name and location
@@ -64,14 +68,16 @@ Create a new vending machine provided with the name and location
 def create_vending_machine():
 
     rqs = import_fun()
+    try:
+        name = request.form['name']
+        location = request.form['location']
 
-    name = request.form['name']
-    location = request.form['location']
+        output, mysql, cur = rqs(f"INSERT INTO vending_machine(location, name) VALUES('{location}','{name}')")
 
-    output, mysql, cur = rqs(f"INSERT INTO vending_machine(location, name) VALUES('{location}','{name}')")
-
-    mysql.connection.commit()
-    cur.close()
+        mysql.connection.commit()
+        cur.close()
+    except:
+        return jsonify(None)
 
     return all_vending_machines()
 
@@ -83,16 +89,18 @@ def edit_vending_machine():
 
     rqs = import_fun()
 
+    try:
+        id = request.form['id']
+        location = request.form['location']
+        name = request.form['name']
 
-    id = request.form['id']
-    location = request.form['location']
-    name = request.form['name']
+        output, mysql ,cur = rqs(f"UPDATE vending_machine SET location = '{location}', name = '{name}' WHERE vending_machine_id={id}")
 
-    output, mysql ,cur = rqs(f"UPDATE vending_machine SET location = '{location}', name = '{name}' WHERE vending_machine_id={id}")
+        mysql.connection.commit()
 
-    mysql.connection.commit()
-
-    if output > 0:
-        cur.close()
-        return all_vending_machines()
-    return jsonify(None)
+        if output > 0:
+            cur.close()
+            return all_vending_machines()
+        return jsonify(None)
+    except:
+        return jsonify(None)

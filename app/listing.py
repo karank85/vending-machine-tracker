@@ -30,16 +30,18 @@ machine and product
 def listing():
 
     rqs = import_fun()
-
-    vending_machine_id = request.form['vending_machine_id']
-    product_id = request.form['product_id']
-    
-    output_rows, mysql, cur = rqs(f"SELECT * FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
-    
-    if output_rows > 0:
-        ls = cur.fetchone()
-        return jsonify(ls)
-    return jsonify(None)
+    try:
+        vending_machine_id = request.form['vending_machine_id']
+        product_id = request.form['product_id']
+        
+        output_rows, mysql, cur = rqs(f"SELECT * FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
+        
+        if output_rows > 0:
+            ls = cur.fetchone()
+            return jsonify(ls)
+        return jsonify(None)
+    except:
+        return jsonify(None)
 
 '''
 Purchase a certain listing by one
@@ -49,15 +51,18 @@ def purchase_listing():
 
     rqs = import_fun()
 
-    vending_machine_id = request.form['vending_machine_id']
-    product_id = request.form['product_id']
-    
-    output_rows, mysql, cur = rqs(f"UPDATE listing SET quantity = quantity - 1 WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
+    try:
+        vending_machine_id = request.form['vending_machine_id']
+        product_id = request.form['product_id']
+        
+        output_rows, mysql, cur = rqs(f"UPDATE listing SET quantity = quantity - 1 WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
 
-    mysql.connection.commit()
-    cur.close()
+        mysql.connection.commit()
+        cur.close()
 
-    return listing()
+        return listing()
+    except:
+        return jsonify(None)
 
 '''
 Delete a listing from the database
@@ -67,16 +72,18 @@ def delete_listing():
 
     rqs = import_fun()
 
+    try:
+        vending_machine_id = request.form['vending_machine_id']
+        product_id = request.form['product_id']
+        
+        output_rows, mysql, cur = rqs(f"DELETE FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
 
-    vending_machine_id = request.form['vending_machine_id']
-    product_id = request.form['product_id']
-    
-    output_rows, mysql, cur = rqs(f"DELETE FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
+        mysql.connection.commit()
+        cur.close()
 
-    mysql.connection.commit()
-    cur.close()
-
-    return all_listing()
+        return all_listing()
+    except:
+        return jsonify(None)
 
 '''
 Create a new listing
@@ -85,18 +92,20 @@ Create a new listing
 def create_listing():
 
     rqs = import_fun()
-    
-    vending_machine_id = request.form['vending_machine_id']
-    product_id = request.form['product_id']
-    quantity = request.form['quantity']
+    try:
+        vending_machine_id = request.form['vending_machine_id']
+        product_id = request.form['product_id']
+        quantity = request.form['quantity']
 
-    output_rows, mysql, cur = rqs(f"INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES({product_id},{vending_machine_id},{quantity})")
+        output_rows, mysql, cur = rqs(f"INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES({product_id},{vending_machine_id},{quantity})")
 
-    mysql.connection.commit()
+        mysql.connection.commit()
 
-    cur.close()
+        cur.close()
 
-    return all_listing()
+        return all_listing()
+    except:
+        return jsonify(None)
 
 '''
 Edit a listing in the database
@@ -106,17 +115,20 @@ def edit_listing():
 
     rqs = import_fun()
     
-    vending_machine_id = request.form['vending_machine_id']
-    product_id = request.form['product_id']
-    quantity = request.form['quantity']
+    try:
+        vending_machine_id = request.form['vending_machine_id']
+        product_id = request.form['product_id']
+        quantity = request.form['quantity']
 
 
-    output_rows, mysql, cur = rqs(f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, quantity = {quantity} WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
+        output_rows, mysql, cur = rqs(f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, quantity = {quantity} WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
 
-    mysql.connection.commit()
+        mysql.connection.commit()
 
 
-    if output_rows > 0:
-        cur.close()
-        return listing()
-    return jsonify(None)
+        if output_rows > 0:
+            cur.close()
+            return listing()
+        return jsonify(None)
+    except:
+        return jsonify(None)
