@@ -6,6 +6,9 @@ def import_fun():
     from util import run_sql_script
     return run_sql_script
 
+'''
+Lists all the listings in the database in JSON format
+'''
 @listing_bp.route('listing/all')
 def all_listing():
 
@@ -19,6 +22,10 @@ def all_listing():
         return jsonify(vending_machines)
     return jsonify(None)
 
+'''
+Get a listing in the database in JSON format based on the vending
+machine and product 
+'''
 @listing_bp.route("/listing", methods=['GET'])
 def listing():
 
@@ -34,6 +41,9 @@ def listing():
         return jsonify(ls)
     return jsonify(None)
 
+'''
+Purchase a certain listing by one
+'''
 @listing_bp.route('/listing/buy', methods=['POST'])
 def purchase_listing():
 
@@ -49,6 +59,9 @@ def purchase_listing():
 
     return listing()
 
+'''
+Delete a listing from the database
+'''
 @listing_bp.route('/listing/delete')
 def delete_listing():
 
@@ -65,6 +78,9 @@ def delete_listing():
 
     return all_listing()
 
+'''
+Create a new listing
+'''
 @listing_bp.route('/listing/create', methods=['GET', 'POST'])
 def create_listing():
 
@@ -82,7 +98,9 @@ def create_listing():
 
     return all_listing()
 
-
+'''
+Edit a listing in the database
+'''
 @listing_bp.route('/listing/edit', methods=['POST'])
 def edit_listing():
 

@@ -6,6 +6,9 @@ def import_fun():
     from util import run_sql_script
     return run_sql_script
 
+'''
+Get all the products provided by a vending machine
+'''
 @vending_service_bp.route('/service/machine-stock', methods=['GET'])
 def vending_machine_stock():
 
@@ -21,6 +24,9 @@ def vending_machine_stock():
         return jsonify(products)
     return jsonify(None)
 
+'''
+Lists all the listings in the database in JSON format
+'''
 @vending_service_bp.route('/service/location-machine', methods=['GET'])
 def location_vending_machine():
     rqs = import_fun()

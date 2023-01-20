@@ -6,7 +6,9 @@ def import_fun():
     from util import run_sql_script
     return run_sql_script
 
-
+'''
+Lists all the vending machines in the database in JSON format
+'''
 @vending_bp.route("/vending-machine/all", methods=['GET'])
 def all_vending_machines():
 
@@ -20,6 +22,9 @@ def all_vending_machines():
         return jsonify(vending_machines)
     return jsonify(None)
 
+'''
+Get information about a certain vending machine provided with the ID
+'''
 @vending_bp.route("/vending-machine", methods=['GET'])
 def vending_machine():
 
@@ -35,6 +40,9 @@ def vending_machine():
         return jsonify(vm)
     return None
 
+'''
+Delete a vending machine from the database
+'''
 @vending_bp.route('/vending-machine/delete')
 def delete_vending_machine():
 
@@ -49,6 +57,9 @@ def delete_vending_machine():
 
     return all_vending_machines()
 
+'''
+Create a new vending machine provided with the name and location
+'''
 @vending_bp.route('/vending-machine/create', methods=['GET', 'POST'])
 def create_vending_machine():
 
@@ -64,6 +75,9 @@ def create_vending_machine():
 
     return all_vending_machines()
 
+'''
+Edit the vending machine information and update it into the database
+'''
 @vending_bp.route('/vending-machine/edit', methods=['POST'])
 def edit_vending_machine():
 

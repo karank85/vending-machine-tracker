@@ -6,7 +6,9 @@ def import_fun():
     from util import run_sql_script
     return run_sql_script
 
-
+'''
+Get all the productes in the database
+'''
 @product_bp.route("/product/all", methods=['GET'])
 def all_products():
 
@@ -20,7 +22,9 @@ def all_products():
         return jsonify(products)
     return jsonify(None)
 
-
+'''
+Get a certain product from the datbase provided with the id
+'''
 @product_bp.route("/product", methods=['GET'])
 def product():
 
@@ -35,6 +39,9 @@ def product():
         return jsonify(pdt)
     return jsonify(None)
 
+'''
+Delete a product from the database
+'''
 @product_bp.route('/product/delete')
 def delete_product():
 
@@ -49,6 +56,10 @@ def delete_product():
 
     return all_products()
 
+'''
+Create a new product and adding to the database provided
+with the name and price per unit
+'''
 @product_bp.route('/product/create', methods=['GET', 'POST'])
 def create_product():
 
@@ -64,6 +75,9 @@ def create_product():
 
     return all_products()
 
+'''
+Lists all the listings in the database in JSON format
+'''
 @product_bp.route('/product/edit', methods=['POST'])
 def edit_product():
 
