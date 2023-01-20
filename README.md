@@ -34,4 +34,4 @@ Components: vending_machine_id, name, location
 - Get all the vending machines installed in a certain location
 
 ### How to run
-`python3 __init__.py`
+`cd` into the `app` directory then run the follow command in your terminal: `python3 __init__.py`
