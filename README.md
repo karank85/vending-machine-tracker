@@ -1,4 +1,4 @@
-# Vending Machine Tracker by: Karan Kumar 6380812
+# Vending Machine Tracker API by: Karan Kumar 6380812
 
 ## Features implemented:
 
@@ -35,3 +35,13 @@ Components: vending_machine_id, name, location
 
 ### How to run
 `cd` into the `app` directory then run the follow command in your terminal: `python3 __init__.py`
+
+### How to test
+
+Recommended software: `Postman`
+
+Send the correct request to each routes and with the correct parameters and values to get json output from each API
+
+#### Example:
+
+![er_diagram](/static/postman.png)
