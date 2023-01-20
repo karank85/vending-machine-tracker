@@ -32,3 +32,6 @@ Components: vending_machine_id, name, location
 ### Extra Services 
 - Get all the products that is being sold in a certain vending machine
 - Get all the vending machines installed in a certain location
+
+### How to run
+`python3 __init__.py`
