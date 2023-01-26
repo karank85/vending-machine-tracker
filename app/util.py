@@ -1,12 +1,13 @@
-from __init__ import mysql 
+from __init__ import mysql
 
 '''
 Run sql query and execute to the database
 '''
-def run_sql_script(query):
 
+
+def run_sql_script(query):
     cur = mysql.connection.cursor()
     query_statement = query
     output = cur.execute(query_statement)
 
-    return (output,mysql,cur)
+    return output, mysql, cur
