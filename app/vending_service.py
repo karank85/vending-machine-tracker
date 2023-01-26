@@ -26,9 +26,9 @@ def vending_machine_stock() -> Response:
             products = cur.fetchall()
             cur.close()
             return jsonify(products)
-        return jsonify(None)
+        return jsonify(success=False, message="no key found")
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -49,6 +49,6 @@ def location_vending_machine() -> Response:
             products = cur.fetchall()
             cur.close()
             return jsonify(products)
-        return jsonify(None)
+        return jsonify(success=False, message="no key found")
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")

@@ -23,7 +23,7 @@ def all_vending_machines() -> Response:
         vending_machines = cur.fetchall()
         cur.close()
         return jsonify(vending_machines)
-    return jsonify(None)
+    return jsonify(success=False, message="bad request")
 
 
 '''
@@ -36,16 +36,16 @@ def vending_machine() -> Response:
     rqs = import_fun()
 
     try:
-        id = request.form['id']
+        vending_machine_id = request.form['id']
 
-        output, mysql, cur = rqs(f"SELECT * FROM vending_machine WHERE vending_machine_id={id}")
+        output, mysql, cur = rqs(f"SELECT * FROM vending_machine WHERE vending_machine_id={vending_machine_id}")
 
         if output > 0:
             vm = cur.fetchone()
             return jsonify(vm)
-        return jsonify(None)
+        return jsonify(success=False, message="no key found")
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -57,16 +57,16 @@ Delete a vending machine from the database
 def delete_vending_machine() -> Response:
     rqs = import_fun()
     try:
-        id = request.form['id']
+        vending_machine_id = request.form['id']
 
-        output, mysql, cur = rqs(f"DELETE FROM vending_machine WHERE vending_machine_id = {id}")
+        output, mysql, cur = rqs(f"DELETE FROM vending_machine WHERE vending_machine_id = {vending_machine_id}")
 
         mysql.connection.commit()
         cur.close()
 
         return all_vending_machines()
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -86,7 +86,7 @@ def create_vending_machine() -> Response:
         mysql.connection.commit()
         cur.close()
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
     return all_vending_machines()
 
@@ -101,18 +101,18 @@ def edit_vending_machine() -> Response:
     rqs = import_fun()
 
     try:
-        id = request.form['id']
+        vending_machine_id = request.form['id']
         location = request.form['location']
         name = request.form['name']
 
         output, mysql, cur = rqs(
-            f"UPDATE vending_machine SET location = '{location}', name = '{name}' WHERE vending_machine_id={id}")
+            f"UPDATE vending_machine SET location = '{location}', name = '{name}' WHERE vending_machine_id={vending_machine_id}")
 
         mysql.connection.commit()
 
         if output > 0:
             cur.close()
             return all_vending_machines()
-        return jsonify(None)
+        return jsonify(success=False, message="no key found")
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")

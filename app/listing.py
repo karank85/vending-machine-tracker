@@ -23,7 +23,7 @@ def all_listing() -> Response:
         vending_machines = cur.fetchall()
         cur.close()
         return jsonify(vending_machines)
-    return jsonify(None)
+    return jsonify(success=False, message="bad request")
 
 
 '''
@@ -45,9 +45,9 @@ def listing() -> Response:
         if output_rows > 0:
             ls = cur.fetchone()
             return jsonify(ls)
-        return jsonify(None)
+        return jsonify(success=False, message="no key found")
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -71,7 +71,7 @@ def purchase_listing() -> Response:
 
         return listing()
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -95,7 +95,7 @@ def delete_listing() -> Response:
 
         return all_listing()
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -120,7 +120,7 @@ def create_listing() -> Response:
 
         return all_listing()
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -145,6 +145,6 @@ def edit_listing() -> Response:
         if output_rows > 0:
             cur.close()
             return listing()
-        return jsonify(None)
+        return jsonify(success=False, message="no key found")
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")

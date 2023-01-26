@@ -23,9 +23,9 @@ def all_products() -> Response:
             products = cur.fetchall()
             cur.close()
             return jsonify(products)
-        return jsonify(None)
+        return jsonify(success=False, message="no key found")
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -37,16 +37,16 @@ Get a certain product from the datbase provided with the id
 def product() -> Response:
     rqs = import_fun()
     try:
-        id = request.form['id']
+        product_id = request.form['id']
 
-        output_rows, mysql, cur = rqs(f"SELECT * FROM products WHERE product_id={id}")
+        output_rows, mysql, cur = rqs(f"SELECT * FROM products WHERE product_id={product_id}")
 
         if output_rows > 0:
             pdt = cur.fetchone()
             return jsonify(pdt)
-        return jsonify(None)
+        return jsonify(success=False, message="no key found")
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -58,16 +58,16 @@ Delete a product from the database
 def delete_product() -> Response:
     rqs = import_fun()
     try:
-        id = request.form['id']
+        product_id = request.form['id']
 
-        output_rows, mysql, cur = rqs(f"DELETE FROM products WHERE product_id = {id}")
+        output_rows, mysql, cur = rqs(f"DELETE FROM products WHERE product_id = {product_id}")
 
         mysql.connection.commit()
         cur.close()
 
         return all_products()
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -91,7 +91,7 @@ def create_product() -> Response:
 
         return all_products()
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -103,12 +103,12 @@ Lists all the listings in the database in JSON format
 def edit_product() -> Response:
     rqs = import_fun()
     try:
-        id = request.form['id']
+        product_id = request.form['id']
         name = request.form['name']
         price = request.form['price']
 
         (output, mysql, cur) = rqs(
-            f"UPDATE products SET product_name = '{name}', price = {price} WHERE product_id={id}")
+            f"UPDATE products SET product_name = '{name}', price = {price} WHERE product_id={product_id}")
 
         mysql.connection.commit()
 
@@ -116,6 +116,6 @@ def edit_product() -> Response:
             cur.close()
             return product()
         else:
-            return jsonify(None)
+            return jsonify(success=False, message="no key found")
     except:
-        return jsonify(None)
+        return jsonify(success=False, message="bad request")

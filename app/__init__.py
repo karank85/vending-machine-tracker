@@ -22,9 +22,11 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
 
+
 @app.route('/', endpoint="home")
 def index():
     return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
