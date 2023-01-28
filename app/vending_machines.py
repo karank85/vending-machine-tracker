@@ -36,7 +36,7 @@ def vending_machine() -> Response:
     rqs = import_fun()
 
     try:
-        vending_machine_id = request.form['id']
+        vending_machine_id = request.args.get('id')
 
         output, mysql, cur = rqs(f"SELECT * FROM vending_machine WHERE vending_machine_id={vending_machine_id}")
 
@@ -57,7 +57,7 @@ Delete a vending machine from the database
 def delete_vending_machine() -> Response:
     rqs = import_fun()
     try:
-        vending_machine_id = request.form['id']
+        vending_machine_id = request.args.get('id')
 
         output, mysql, cur = rqs(f"DELETE FROM vending_machine WHERE vending_machine_id = {vending_machine_id}")
 
@@ -78,8 +78,8 @@ Create a new vending machine provided with the name and location
 def create_vending_machine() -> Response:
     rqs = import_fun()
     try:
-        name = request.form['name']
-        location = request.form['location']
+        name = request.args.get('name')
+        location = request.args.get('location')
 
         output, mysql, cur = rqs(f"INSERT INTO vending_machine(location, name) VALUES('{location}','{name}')")
 
@@ -101,9 +101,9 @@ def edit_vending_machine() -> Response:
     rqs = import_fun()
 
     try:
-        vending_machine_id = request.form['id']
-        location = request.form['location']
-        name = request.form['name']
+        vending_machine_id = request.args.get('id')
+        location = request.args.get('location')
+        name = request.args.get('name')
 
         output, mysql, cur = rqs(
             f"UPDATE vending_machine SET location = '{location}', name = '{name}' WHERE vending_machine_id={vending_machine_id}")
@@ -112,7 +112,7 @@ def edit_vending_machine() -> Response:
 
         if output > 0:
             cur.close()
-            return all_vending_machines()
+            return vending_machine()
         return jsonify(success=False, message="no key found")
     except:
         return jsonify(success=False, message="bad request")

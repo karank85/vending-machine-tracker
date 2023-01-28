@@ -29,7 +29,7 @@ def test_product_get_unique():
 
 
 def test_product_get_no_key_exist():
-    sample_fake_param = {'product_id': '9000'}
+    sample_fake_param = {'id': '9000'}
 
     get_a_single_product = requests.get(ENDPOINT + f"product", params=sample_fake_param)
 
@@ -37,9 +37,9 @@ def test_product_get_no_key_exist():
 
     json_response_got = get_a_single_product.json()
 
-    product_id_got = json_response_got["success"]
+    response_status_got = json_response_got["success"]
 
-    assert not product_id_got
+    assert not response_status_got
 
 
 def test_edit_product():
@@ -81,6 +81,6 @@ def test_delete_product():
 
     assert get_listing_after_deleting.status_code == 200
 
-    json_response_after_create = get_listing_after_deleting.json()
+    json_response_after_delete = get_listing_after_deleting.json()
 
-    assert product_get_all() == json_response_after_create
+    assert product_get_all() == json_response_after_delete

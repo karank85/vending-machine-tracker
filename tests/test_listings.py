@@ -36,9 +36,9 @@ def test_listing_get_no_key_exist():
 
     json_response_got = get_a_single_listing.json()
 
-    product_id_got = json_response_got["success"]
+    response_status_got = json_response_got["success"]
 
-    assert not product_id_got
+    assert not response_status_got
 
 
 def test_simple_purchase_listing():
