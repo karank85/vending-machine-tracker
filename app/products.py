@@ -37,7 +37,7 @@ Get a certain product from the datbase provided with the id
 def product() -> Response:
     rqs = import_fun()
     try:
-        product_id = request.form['id']
+        product_id = request.args.get('id')
 
         output_rows, mysql, cur = rqs(f"SELECT * FROM products WHERE product_id={product_id}")
 
@@ -58,7 +58,7 @@ Delete a product from the database
 def delete_product() -> Response:
     rqs = import_fun()
     try:
-        product_id = request.form['id']
+        product_id = request.args.get('id')
 
         output_rows, mysql, cur = rqs(f"DELETE FROM products WHERE product_id = {product_id}")
 
@@ -81,8 +81,8 @@ def create_product() -> Response:
     rqs = import_fun()
 
     try:
-        name = request.form['name']
-        price = request.form['price']
+        name = request.args.get('name')
+        price = request.args.get('price')
 
         output_rows, mysql, cur = rqs(f"INSERT INTO products(product_name, price) VALUES('{name}',{price})")
 
@@ -103,9 +103,9 @@ Lists all the listings in the database in JSON format
 def edit_product() -> Response:
     rqs = import_fun()
     try:
-        product_id = request.form['id']
-        name = request.form['name']
-        price = request.form['price']
+        product_id = request.args.get('id')
+        name = request.args.get('name')
+        price = request.args.get('price')
 
         (output, mysql, cur) = rqs(
             f"UPDATE products SET product_name = '{name}', price = {price} WHERE product_id={product_id}")

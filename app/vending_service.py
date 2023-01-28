@@ -17,7 +17,7 @@ Get all the products provided by a vending machine
 def vending_machine_stock() -> Response:
     rqs = import_fun()
     try:
-        vending_id = request.form['id']
+        vending_id = request.args.get('id')
 
         output_rows, mysql, cur = rqs(
             f"SELECT product_id, quantity FROM listing WHERE vending_machine_id = {vending_id}")
@@ -40,7 +40,7 @@ Get all the vending machines installed at a location
 def location_vending_machine() -> Response:
     rqs = import_fun()
     try:
-        location = request.form['location']
+        location = request.args.get('location')
 
         output_rows, mysql, cur = rqs(
             f"SELECT vending_machine_id, name FROM vending_machine WHERE location = '{location}'")

@@ -36,8 +36,8 @@ machine and product
 def listing() -> Response:
     rqs = import_fun()
     try:
-        vending_machine_id = request.form['vending_machine_id']
-        product_id = request.form['product_id']
+        vending_machine_id = request.args.get('vending_machine_id')
+        product_id = request.args.get('product_id')
 
         output_rows, mysql, cur = rqs(
             f"SELECT * FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
@@ -60,8 +60,8 @@ def purchase_listing() -> Response:
     rqs = import_fun()
 
     try:
-        vending_machine_id = request.form['vending_machine_id']
-        product_id = request.form['product_id']
+        vending_machine_id = request.args.get('vending_machine_id')
+        product_id = request.args.get('product_id')
 
         output_rows, mysql, cur = rqs(
             f"UPDATE listing SET quantity = quantity - 1 WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
@@ -84,8 +84,8 @@ def delete_listing() -> Response:
     rqs = import_fun()
 
     try:
-        vending_machine_id = request.form['vending_machine_id']
-        product_id = request.form['product_id']
+        vending_machine_id = request.args.get('vending_machine_id')
+        product_id = request.args.get('product_id')
 
         output_rows, mysql, cur = rqs(
             f"DELETE FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
@@ -107,9 +107,9 @@ Create a new listing
 def create_listing() -> Response:
     rqs = import_fun()
     try:
-        vending_machine_id = request.form['vending_machine_id']
-        product_id = request.form['product_id']
-        quantity = request.form['quantity']
+        vending_machine_id = request.args.get('vending_machine_id')
+        product_id = request.args.get('product_id')
+        quantity = request.args.get('quantity')
 
         output_rows, mysql, cur = rqs(
             f"INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES({product_id},{vending_machine_id},{quantity})")
@@ -133,9 +133,9 @@ def edit_listing() -> Response:
     rqs = import_fun()
 
     try:
-        vending_machine_id = request.form['vending_machine_id']
-        product_id = request.form['product_id']
-        quantity = request.form['quantity']
+        vending_machine_id = request.args.get('vending_machine_id')
+        product_id = request.args.get('product_id')
+        quantity = request.args.get('quantity')
 
         output_rows, mysql, cur = rqs(
             f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, quantity = {quantity} WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
