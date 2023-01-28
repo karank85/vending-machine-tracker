@@ -4,7 +4,7 @@ listing_bp = Blueprint('listing', __name__, url_prefix='/')
 
 
 def import_fun():
-    from util import run_sql_script
+    from run_query import run_sql_script
     return run_sql_script
 
 

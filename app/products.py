@@ -3,13 +3,16 @@ from flask import Blueprint, request, jsonify, Response
 product_bp = Blueprint('product', __name__, url_prefix='/')
 
 
+no_key_found_message = "no key found"
+bad_request_message = "bad request"
+
 def import_fun():
-    from util import run_sql_script
+    from run_query import run_sql_script
     return run_sql_script
 
 
 '''
-Get all the productes in the database
+Get all the products in the database
 '''
 
 
@@ -23,9 +26,9 @@ def all_products() -> Response:
             products = cur.fetchall()
             cur.close()
             return jsonify(products)
-        return jsonify(success=False, message="no key found")
+        return jsonify(success=False, message=no_key_found_message)
     except:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=bad_request_message)
 
 
 '''
@@ -44,9 +47,9 @@ def product() -> Response:
         if output_rows > 0:
             pdt = cur.fetchone()
             return jsonify(pdt)
-        return jsonify(success=False, message="no key found")
+        return jsonify(success=False, message=no_key_found_message)
     except:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=bad_request_message)
 
 
 '''
@@ -67,7 +70,7 @@ def delete_product() -> Response:
 
         return all_products()
     except:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=bad_request_message)
 
 
 '''
@@ -76,7 +79,7 @@ with the name and price per unit
 '''
 
 
-@product_bp.route('/product/create', methods=['GET', 'POST'])
+@product_bp.route('/product/create', methods=['POST'])
 def create_product() -> Response:
     rqs = import_fun()
 
@@ -91,7 +94,7 @@ def create_product() -> Response:
 
         return all_products()
     except:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=bad_request_message)
 
 
 '''
@@ -102,7 +105,7 @@ Lists all the listings in the database in JSON format
 @product_bp.route('/product/edit', methods=['POST'])
 def edit_product() -> Response:
     rqs = import_fun()
-    try:
+    if request.method == 'POST':
         product_id = request.args.get('id')
         name = request.args.get('name')
         price = request.args.get('price')
@@ -116,6 +119,6 @@ def edit_product() -> Response:
             cur.close()
             return product()
         else:
-            return jsonify(success=False, message="no key found")
-    except:
-        return jsonify(success=False, message="bad request")
+            return jsonify(success=False, message=no_key_found_message)
+    else:
+        return jsonify(success=False, message=bad_request_message)
