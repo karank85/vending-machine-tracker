@@ -1,12 +1,13 @@
 import random
 
 import requests
+from flask import Response
 
 ENDPOINT = "http://127.0.0.1:5000/"
 
 
-def vending_machine_get_all():
-    get_all_vending_machine_response = requests.get(ENDPOINT + f"/vending-machine/all")
+def vending_machine_get_all() -> Response:
+    get_all_vending_machine_response = requests.get(ENDPOINT + "/vending-machine/all")
 
     assert get_all_vending_machine_response.status_code == 200
 
@@ -14,8 +15,8 @@ def vending_machine_get_all():
 
 
 def test_vending_machine_get_unique():
-    sample_param = {'id': '2'}
-    get_a_single_product = requests.get(ENDPOINT + f"vending-machine", params=sample_param)
+    sample_param = {"id": "2"}
+    get_a_single_product = requests.get(ENDPOINT + "vending-machine", params=sample_param)
 
     assert get_a_single_product.status_code == 200
 
@@ -29,9 +30,9 @@ def test_vending_machine_get_unique():
 
 
 def test_vending_machine_get_no_key_exist():
-    sample_fake_param = {'id': '9000'}
+    sample_fake_param = {"id": "9000"}
 
-    get_a_single_vending_machine_response = requests.get(ENDPOINT + f"vending-machine", params=sample_fake_param)
+    get_a_single_vending_machine_response = requests.get(ENDPOINT + "vending-machine", params=sample_fake_param)
 
     assert get_a_single_vending_machine_response.status_code == 200
 
@@ -43,16 +44,36 @@ def test_vending_machine_get_no_key_exist():
 
 
 def test_edit_vending_machine():
-    random_location_to_set = ["kfc", "burger king", "dominoes", "mcdonalds",
-                              "popeyes", "chic fil a", "wingstop",
-                              "taco bell", "chester grill"][random.randint(0, 8)]
-    random_name_to_set = ["vending8", "vending9", "vending10", "vending11",
-                          "vending12", "vending13", "vending14",
-                          "vending15", "vending16"][random.randint(0, 8)]
+    random_location_to_set = [
+        "kfc",
+        "burger king",
+        "dominoes",
+        "mcdonalds",
+        "popeyes",
+        "chic fil a",
+        "wingstop",
+        "taco bell",
+        "chester grill",
+    ][random.randint(0, 8)]
+    random_name_to_set = [
+        "vending8",
+        "vending9",
+        "vending10",
+        "vending11",
+        "vending12",
+        "vending13",
+        "vending14",
+        "vending15",
+        "vending16",
+    ][random.randint(0, 8)]
 
-    sample_param = {"id": '3', "name": random_name_to_set, "location": random_location_to_set}
+    sample_param = {
+        "id": "3",
+        "name": random_name_to_set,
+        "location": random_location_to_set,
+    }
 
-    get_vending_machine_after_edit = requests.post(ENDPOINT + f"/vending-machine/edit", params=sample_param)
+    get_vending_machine_after_edit = requests.post(ENDPOINT + "/vending-machine/edit", params=sample_param)
 
     assert get_vending_machine_after_edit.status_code == 200
 
@@ -62,14 +83,13 @@ def test_edit_vending_machine():
     name_after_edit = json_response_after_edit["name"]
     location_after_edit = json_response_after_edit["location"]
 
-    assert name_after_edit == random_name_to_set and \
-           location_after_edit == random_location_to_set
+    assert name_after_edit == random_name_to_set and location_after_edit == random_location_to_set
 
 
 def test_delete_vending_machine():
-    sample_param = {"id": '5'}
+    sample_param = {"id": "5"}
 
-    get_listing_after_deleting = requests.post(ENDPOINT + f"/vending-machine/delete", params=sample_param)
+    get_listing_after_deleting = requests.post(ENDPOINT + "/vending-machine/delete", params=sample_param)
 
     assert get_listing_after_deleting.status_code == 200
 
@@ -79,8 +99,8 @@ def test_delete_vending_machine():
 
 
 def test_create_vending_machine():
-    sample_param = {"name": 'coolvending', "location": 'mars'}
-    vending_machine_create_response = requests.post(ENDPOINT + f"/vending-machine/create", params=sample_param)
+    sample_param = {"name": "coolvending", "location": "mars"}
+    vending_machine_create_response = requests.post(ENDPOINT + "/vending-machine/create", params=sample_param)
 
     assert vending_machine_create_response.status_code == 200
 

@@ -4,16 +4,17 @@ ENDPOINT = "http://127.0.0.1:5000/"
 
 
 def test_service_vending_machine_stock():
-    sample_param = {'id': '2'}
-    get_all_vending_machine_stock_response = requests.get(ENDPOINT + f"/service/machine-stock", params=sample_param)
+    sample_param = {"id": "2"}
+    get_all_vending_machine_stock_response = requests.get(ENDPOINT + "/service/machine-stock", params=sample_param)
 
     assert get_all_vending_machine_stock_response.status_code == 200
 
 
 def test_service_vending_machine_location():
-    sample_param = {'location': 'mlc'}
-    get_all_vending_machine_at_location_response = requests.get(ENDPOINT + f"/service/location-machine"
-                                                                , params=sample_param)
+    sample_param = {"location": "mlc"}
+    get_all_vending_machine_at_location_response = requests.get(
+        ENDPOINT + "/service/location-machine", params=sample_param
+    )
 
     assert get_all_vending_machine_at_location_response.status_code == 200
 
