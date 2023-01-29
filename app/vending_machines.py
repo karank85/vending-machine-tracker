@@ -1,3 +1,4 @@
+import MySQLdb.cursors
 from flask import Blueprint, request, jsonify, Response
 
 vending_bp = Blueprint('vending', __name__, url_prefix='/')
@@ -17,13 +18,15 @@ Lists all the vending machines in the database in JSON format
 def all_vending_machines() -> Response:
     query_run_function = import_query_run_function()
 
-    output_rows, mysql, cur = query_run_function(f"SELECT * FROM vending_machine")
+    if request.method == 'GET':
+        output_rows, mysql, cur = query_run_function(f"SELECT * FROM vending_machine")
 
-    if output_rows > 0:
-        vending_machines = cur.fetchall()
-        cur.close()
-        return jsonify(vending_machines)
-    return jsonify(success=False, message="bad request")
+        if output_rows > 0:
+            vending_machines: MySQLdb.CursorStoreResultMixIn = cur.fetchall()
+            cur.close()
+            return jsonify(vending_machines)
+    else:
+        return jsonify(success=False, message="bad request")
 
 
 '''
@@ -35,16 +38,17 @@ Get information about a certain vending machine provided with the ID
 def vending_machine() -> Response:
     query_run_function = import_query_run_function()
 
-    try:
-        vending_machine_id = request.args.get('id')
+    if request.method == 'GET':
+        vending_machine_id: str = request.args.get('id', type=str)
 
-        output, mysql, cur = query_run_function(f"SELECT * FROM vending_machine WHERE vending_machine_id={vending_machine_id}")
+        output, mysql, cur = query_run_function(
+            f"SELECT * FROM vending_machine WHERE vending_machine_id={vending_machine_id}")
 
         if output > 0:
-            vm = cur.fetchone()
+            vm: MySQLdb.CursorStoreResultMixIn = cur.fetchone()
             return jsonify(vm)
         return jsonify(success=False, message="no key found")
-    except:
+    else:
         return jsonify(success=False, message="bad request")
 
 
@@ -53,19 +57,21 @@ Delete a vending machine from the database
 '''
 
 
-@vending_bp.route('/vending-machine/delete')
+@vending_bp.route('/vending-machine/delete', methods=['POST'])
 def delete_vending_machine() -> Response:
     query_run_function = import_query_run_function()
-    try:
-        vending_machine_id = request.args.get('id')
+    if request.method == 'POST':
+        vending_machine_id: str = request.args.get('id', type=str)
 
-        output, mysql, cur = query_run_function(f"DELETE FROM vending_machine WHERE vending_machine_id = {vending_machine_id}")
+        output, mysql, cur = query_run_function(
+            f"DELETE FROM vending_machine WHERE vending_machine_id = {vending_machine_id}")
 
         mysql.connection.commit()
         cur.close()
 
+        request.method = "GET"
         return all_vending_machines()
-    except:
+    else:
         return jsonify(success=False, message="bad request")
 
 
@@ -78,19 +84,18 @@ Create a new vending machine provided with the name and location
 def create_vending_machine() -> Response:
     query_run_function = import_query_run_function()
     if request.method == 'POST':
-        name = request.args.get('name')
-        location = request.args.get('location')
+        name: str = request.args.get('name', type=str)
+        location: str = request.args.get('location', type=str)
 
-        output, mysql, cur = query_run_function(f"INSERT INTO vending_machine(location, name) VALUES('{location}','{name}')")
+        output, mysql, cur = query_run_function(
+            f"INSERT INTO vending_machine(location, name) VALUES('{location}','{name}')")
 
         mysql.connection.commit()
         cur.close()
-
+        request.method = "GET"
         return all_vending_machines()
     else:
         return jsonify(success=False, message="bad request")
-
-
 
 
 '''
@@ -103,17 +108,20 @@ def edit_vending_machine() -> Response:
     query_run_function = import_query_run_function()
 
     if request.method == 'POST':
-        vending_machine_id = request.args.get('id')
-        location = request.args.get('location')
-        name = request.args.get('name')
+        vending_machine_id: str = request.args.get('id', type=str)
+        location: str = request.args.get('location', type=str)
+        name: str = request.args.get('name', type=str)
 
         output, mysql, cur = query_run_function(
-            f"UPDATE vending_machine SET location = '{location}', name = '{name}' WHERE vending_machine_id={vending_machine_id}")
+            f"UPDATE vending_machine SET location = '{location}', name = '{name}' "
+            f"WHERE vending_machine_id={vending_machine_id}"
+        )
 
         mysql.connection.commit()
 
         if output > 0:
             cur.close()
+            request.method = 'GET'
             return vending_machine()
         return jsonify(success=False, message="no key found")
     else:

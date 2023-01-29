@@ -77,7 +77,7 @@ def test_create_listing():
 def test_delete_product():
     sample_param = {"id": '6'}
 
-    get_listing_after_deleting = requests.get(ENDPOINT + f"/product/delete", params=sample_param)
+    get_listing_after_deleting = requests.post(ENDPOINT + f"/product/delete", params=sample_param)
 
     assert get_listing_after_deleting.status_code == 200
 

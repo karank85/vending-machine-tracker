@@ -1,3 +1,4 @@
+import MySQLdb
 from flask import Blueprint, request, jsonify, Response
 
 listing_bp = Blueprint('listing', __name__, url_prefix='/')
@@ -15,6 +16,7 @@ Lists all the listings in the database in JSON format
 
 @listing_bp.route('listing/all', methods=['GET'])
 def all_listing() -> Response:
+
     query_run_function = import_query_run_function()
 
     if request.method == 'GET':
@@ -22,9 +24,9 @@ def all_listing() -> Response:
         output_rows, mysql, cur = query_run_function(f"SELECT * FROM listing")
 
         if output_rows > 0:
-            vending_machines = cur.fetchall()
+            listings: MySQLdb.CursorStoreResultMixIn = cur.fetchall()
             cur.close()
-            return jsonify(vending_machines)
+            return jsonify(listings)
     else:
         return jsonify(success=False, message="bad request")
 
@@ -39,15 +41,15 @@ machine and product
 def listing() -> Response:
     query_run_function = import_query_run_function()
     if request.method == 'GET':
-        vending_machine_id = request.args.get('vending_machine_id')
-        product_id = request.args.get('product_id')
+        vending_machine_id: str = request.args.get('vending_machine_id',type=str)
+        product_id: str = request.args.get('product_id',type=str)
 
         output_rows, mysql, cur = query_run_function(
             f"SELECT * FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
 
         if output_rows > 0:
-            ls = cur.fetchone()
-            return jsonify(ls)
+            listing: MySQLdb.CursorStoreResultMixIn = cur.fetchone()
+            return jsonify(listing)
         return jsonify(success=False, message="no key found")
     else:
         return jsonify(success=False, message="bad request")
@@ -63,8 +65,8 @@ def purchase_listing() -> Response:
     query_run_function = import_query_run_function()
 
     if request.method == 'POST':
-        vending_machine_id = request.args.get('vending_machine_id')
-        product_id = request.args.get('product_id')
+        vending_machine_id: str = request.args.get('vending_machine_id', type=str)
+        product_id: str = request.args.get('product_id', type=str)
 
         output_rows, mysql, cur = query_run_function(
             f"UPDATE listing SET quantity = quantity - 1 WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
@@ -87,8 +89,8 @@ def delete_listing() -> Response:
     query_run_function = import_query_run_function()
 
     if request.method == 'POST':
-        vending_machine_id = request.args.get('vending_machine_id')
-        product_id = request.args.get('product_id')
+        vending_machine_id: str = request.args.get('vending_machine_id', type=str)
+        product_id: str = request.args.get('product_id', type=str)
 
         output_rows, mysql, cur = query_run_function(
             f"DELETE FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
@@ -110,9 +112,9 @@ Create a new listing
 def create_listing() -> Response:
     query_run_function = import_query_run_function()
     if request.method == 'POST':
-        vending_machine_id = request.args.get('vending_machine_id')
-        product_id = request.args.get('product_id')
-        quantity = request.args.get('quantity')
+        vending_machine_id: str = request.args.get('vending_machine_id', type=str)
+        product_id: str = request.args.get('product_id', type=str)
+        quantity: str = request.args.get('quantity', type=str)
 
         output_rows, mysql, cur = query_run_function(
             f"INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES({product_id},{vending_machine_id},{quantity})")
@@ -136,9 +138,9 @@ def edit_listing() -> Response:
     query_run_function = import_query_run_function()
 
     if request.method == 'POST':
-        vending_machine_id = request.args.get('vending_machine_id')
-        product_id = request.args.get('product_id')
-        quantity = request.args.get('quantity')
+        vending_machine_id: str = request.args.get('vending_machine_id', type=str)
+        product_id: str = request.args.get('product_id', type=str)
+        quantity: str = request.args.get('quantity', type=str)
 
         output_rows, mysql, cur = query_run_function(
             f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, quantity = {quantity} WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")

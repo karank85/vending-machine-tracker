@@ -91,9 +91,9 @@ def test_delete_listing():
 
     assert get_listing_after_deleting.status_code == 200
 
-    json_response_after_create = get_listing_after_deleting.json()
+    json_response_after_delete = get_listing_after_deleting.json()
 
-    assert listing_get_all() == json_response_after_create
+    assert listing_get_all() == json_response_after_delete
 
 
 def test_create_listing():
