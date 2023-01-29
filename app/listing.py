@@ -1,5 +1,6 @@
 import MySQLdb
 from flask import Blueprint, request, jsonify, Response
+from config.error_message import NO_KEY_FOUND_MESSAGE, BAD_REQUEST_MESSAGE
 
 listing_bp = Blueprint('listing', __name__, url_prefix='/')
 
@@ -28,7 +29,7 @@ def all_listing() -> Response:
             cur.close()
             return jsonify(listings)
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -50,9 +51,9 @@ def listing() -> Response:
         if output_rows > 0:
             listing: MySQLdb.CursorStoreResultMixIn = cur.fetchone()
             return jsonify(listing)
-        return jsonify(success=False, message="no key found")
+        return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -76,7 +77,7 @@ def purchase_listing() -> Response:
         request.method = "GET"
         return listing()
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -100,7 +101,7 @@ def delete_listing() -> Response:
         request.method = "GET"
         return all_listing()
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -125,7 +126,7 @@ def create_listing() -> Response:
         request.method = "GET"
         return all_listing()
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -151,6 +152,6 @@ def edit_listing() -> Response:
             cur.close()
             request.method = 'GET'
             return listing()
-        return jsonify(success=False, message="no key found")
+        return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)

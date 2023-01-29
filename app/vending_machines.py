@@ -1,5 +1,6 @@
 import MySQLdb.cursors
 from flask import Blueprint, request, jsonify, Response
+from config.error_message import NO_KEY_FOUND_MESSAGE, BAD_REQUEST_MESSAGE
 
 vending_bp = Blueprint('vending', __name__, url_prefix='/')
 
@@ -26,7 +27,7 @@ def all_vending_machines() -> Response:
             cur.close()
             return jsonify(vending_machines)
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -47,9 +48,9 @@ def vending_machine() -> Response:
         if output > 0:
             vm: MySQLdb.CursorStoreResultMixIn = cur.fetchone()
             return jsonify(vm)
-        return jsonify(success=False, message="no key found")
+        return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -72,7 +73,7 @@ def delete_vending_machine() -> Response:
         request.method = "GET"
         return all_vending_machines()
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -95,7 +96,7 @@ def create_vending_machine() -> Response:
         request.method = "GET"
         return all_vending_machines()
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -123,6 +124,6 @@ def edit_vending_machine() -> Response:
             cur.close()
             request.method = 'GET'
             return vending_machine()
-        return jsonify(success=False, message="no key found")
+        return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)

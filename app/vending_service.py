@@ -1,5 +1,6 @@
 import MySQLdb
 from flask import Blueprint, request, jsonify, Response
+from config.error_message import NO_KEY_FOUND_MESSAGE, BAD_REQUEST_MESSAGE
 
 vending_service_bp = Blueprint('vending_service', __name__, url_prefix='/')
 
@@ -27,9 +28,9 @@ def vending_machine_stock() -> Response:
             products: MySQLdb.CursorStoreResultMixIn = cur.fetchall()
             cur.close()
             return jsonify(products)
-        return jsonify(success=False, message="no key found")
+        return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -50,6 +51,6 @@ def location_vending_machine() -> Response:
             products: MySQLdb.CursorStoreResultMixIn = cur.fetchall()
             cur.close()
             return jsonify(products)
-        return jsonify(success=False, message="no key found")
+        return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
     else:
-        return jsonify(success=False, message="bad request")
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)

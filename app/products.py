@@ -1,10 +1,8 @@
 import MySQLdb
 from flask import Blueprint, request, jsonify, Response
+from config.error_message import NO_KEY_FOUND_MESSAGE, BAD_REQUEST_MESSAGE
 
 product_bp = Blueprint('product', __name__, url_prefix='/')
-
-no_key_found_message = "no key found"
-bad_request_message = "bad request"
 
 
 def import_query_run_function():
@@ -27,7 +25,7 @@ def all_products() -> Response:
         products: MySQLdb.cursors.CursorStoreResultMixIn = cur.fetchall()
         cur.close()
         return jsonify(products)
-    return jsonify(success=False, message=no_key_found_message)
+    return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
 
 
 '''
@@ -46,9 +44,9 @@ def product() -> Response:
         if output_rows > 0:
             pdt: MySQLdb.cursors.CursorStoreResultMixIn = cur.fetchone()
             return jsonify(pdt)
-        return jsonify(success=False, message=no_key_found_message)
+        return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
     else:
-        return jsonify(success=False, message=bad_request_message)
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -69,7 +67,7 @@ def delete_product() -> Response:
         request.method = 'GET'
         return all_products()
     else:
-        return jsonify(success=False, message=bad_request_message)
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -94,7 +92,7 @@ def create_product() -> Response:
         request.method = 'GET'
         return all_products()
     else:
-        return jsonify(success=False, message=bad_request_message)
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
 
 
 '''
@@ -119,6 +117,6 @@ def edit_product() -> Response:
             request.method = 'GET'
             return product()
         else:
-            return jsonify(success=False, message=no_key_found_message)
+            return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
     else:
-        return jsonify(success=False, message=bad_request_message)
+        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
