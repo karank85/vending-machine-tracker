@@ -48,7 +48,7 @@ coverage.xml
 *.cover
 *.py,cover
 .hypothesis/
-.pytest_cache/
+tests/.pytest_cache/
 cover/
 
 # Translations
@@ -161,3 +161,7 @@ cython_debug/
 
 # cred.yaml
 cred.yaml
+
+poetry.lock
+
+*.DS_Store
