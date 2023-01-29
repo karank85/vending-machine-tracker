@@ -97,7 +97,6 @@ def test_delete_listing():
 
 
 def test_create_listing():
-
     sample_param = {"product_id": '4', "vending_machine_id": '4', "quantity": '5'}
     get_listing_after_creating = requests.post(ENDPOINT + f"/listing/create", params=sample_param)
 

@@ -1,4 +1,4 @@
-import yaml 
+import yaml
 
 cred = yaml.load(open('../cred.yaml'), Loader=yaml.Loader)
 

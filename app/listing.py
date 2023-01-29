@@ -17,7 +17,6 @@ Lists all the listings in the database in JSON format
 
 @listing_bp.route('listing/all', methods=['GET'])
 def all_listing() -> Response:
-
     query_run_function = import_query_run_function()
 
     if request.method == 'GET':
@@ -42,15 +41,15 @@ machine and product
 def listing() -> Response:
     query_run_function = import_query_run_function()
     if request.method == 'GET':
-        vending_machine_id: str = request.args.get('vending_machine_id',type=str)
-        product_id: str = request.args.get('product_id',type=str)
+        vending_machine_id: str = request.args.get('vending_machine_id', type=str)
+        product_id: str = request.args.get('product_id', type=str)
 
         output_rows, mysql, cur = query_run_function(
             f"SELECT * FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
 
         if output_rows > 0:
-            listing: MySQLdb.CursorStoreResultMixIn = cur.fetchone()
-            return jsonify(listing)
+            listing_fetched: MySQLdb.CursorStoreResultMixIn = cur.fetchone()
+            return jsonify(listing_fetched)
         return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
     else:
         return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
@@ -70,7 +69,9 @@ def purchase_listing() -> Response:
         product_id: str = request.args.get('product_id', type=str)
 
         output_rows, mysql, cur = query_run_function(
-            f"UPDATE listing SET quantity = quantity - 1 WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
+            f"UPDATE listing SET quantity = quantity - 1 WHERE product_id = {product_id} "
+            f"AND vending_machine_id = {vending_machine_id}"
+        )
 
         mysql.connection.commit()
         cur.close()
@@ -118,7 +119,9 @@ def create_listing() -> Response:
         quantity: str = request.args.get('quantity', type=str)
 
         output_rows, mysql, cur = query_run_function(
-            f"INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES({product_id},{vending_machine_id},{quantity})")
+            f"INSERT INTO listing(product_id, vending_machine_id, quantity) "
+            f"VALUES({product_id},{vending_machine_id},{quantity})"
+        )
 
         mysql.connection.commit()
 
@@ -144,7 +147,9 @@ def edit_listing() -> Response:
         quantity: str = request.args.get('quantity', type=str)
 
         output_rows, mysql, cur = query_run_function(
-            f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, quantity = {quantity} WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}")
+            f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, "
+            f"quantity = {quantity} WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}"
+        )
 
         mysql.connection.commit()
 
