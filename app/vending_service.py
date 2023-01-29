@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, Response
 vending_service_bp = Blueprint('vending_service', __name__, url_prefix='/')
 
 
-def import_fun():
+def import_query_run_function():
     from run_query import run_sql_script
     return run_sql_script
 
@@ -15,11 +15,11 @@ Get all the products provided by a vending machine
 
 @vending_service_bp.route('/service/machine-stock', methods=['GET'])
 def vending_machine_stock() -> Response:
-    rqs = import_fun()
+    query_run_function = import_query_run_function()
     try:
         vending_id = request.args.get('id')
 
-        output_rows, mysql, cur = rqs(
+        output_rows, mysql, cur = query_run_function(
             f"SELECT product_id, quantity FROM listing WHERE vending_machine_id = {vending_id}")
 
         if output_rows > 0:
@@ -38,11 +38,11 @@ Get all the vending machines installed at a location
 
 @vending_service_bp.route('/service/location-machine', methods=['GET'])
 def location_vending_machine() -> Response:
-    rqs = import_fun()
+    query_run_function = import_query_run_function()
     try:
         location = request.args.get('location')
 
-        output_rows, mysql, cur = rqs(
+        output_rows, mysql, cur = query_run_function(
             f"SELECT vending_machine_id, name FROM vending_machine WHERE location = '{location}'")
 
         if output_rows > 0:

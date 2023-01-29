@@ -50,7 +50,7 @@ def test_edit_product():
 
     sample_param = {"id": '5', "name": random_name_to_set, "price": random_price_to_set}
 
-    get_product_after_edit = requests.post(ENDPOINT + f"product/edit", params=sample_param)
+    get_product_after_edit = requests.post(ENDPOINT + f"/product/edit", params=sample_param)
 
     assert get_product_after_edit.status_code == 200
 
