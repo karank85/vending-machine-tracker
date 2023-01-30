@@ -14,7 +14,6 @@ def listing_get_all() -> Response:
     return get_all_listing_response.json()
 
 
-"""
 def test_listing_get_unique():
     sample_param = {"product_id": "2", "vending_machine_id": "1"}
     get_a_single_listing = requests.get(ENDPOINT + "listing", params=sample_param)
@@ -28,7 +27,6 @@ def test_listing_get_unique():
     quantity_got = json_response_got["quantity"]
 
     assert product_id_got == 2 and vending_machine_got == 1 and quantity_got == 20
-"""
 
 
 def test_listing_get_no_key_exist():

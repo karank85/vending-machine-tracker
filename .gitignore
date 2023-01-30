@@ -166,3 +166,4 @@ poetry.lock
 
 *.DS_Store
 /app/.pytest_cache/
+/.pytest_cache/

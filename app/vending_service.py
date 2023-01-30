@@ -1,54 +1,20 @@
-from typing import Any, Callable
-
-import MySQLdb
-from config.error_message import BAD_REQUEST_MESSAGE, NO_KEY_FOUND_MESSAGE
-from flask import Blueprint, Response, jsonify, request
+from api import get_all_items
+from flask import Blueprint, Response, request
 
 vending_service_bp = Blueprint("vending_service", __name__, url_prefix="/")
-
-
-def import_query_run_function() -> Callable[[str], tuple[int, Any, Any]]:
-    """Import run sql script function."""
-    from run_query import run_sql_script
-
-    return run_sql_script
 
 
 @vending_service_bp.route("/service/machine-stock", methods=["GET"])
 def vending_machine_stock() -> Response:
     """Get all the products provided by a vending machine."""
-    query_run_function = import_query_run_function()
-    if request.method == "GET":
-        vending_id: str = request.args.get("id", type=str)
-
-        output_rows, mysql, cur = query_run_function(
-            f"SELECT product_id, quantity FROM listing WHERE vending_machine_id = {vending_id}"
-        )
-
-        if output_rows > 0:
-            products: MySQLdb.CursorStoreResultMixIn = cur.fetchall()
-            cur.close()
-            return jsonify(products)
-        return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
-    else:
-        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
+    vending_id: str = request.args.get("id", type=str)
+    query_statement: str = f"SELECT product_id, quantity FROM listing " f"WHERE vending_machine_id = {vending_id}"
+    return get_all_items(query_statement)
 
 
 @vending_service_bp.route("/service/location-machine", methods=["GET"])
 def location_vending_machine() -> Response:
     """Get all the vending machines installed at a location."""
-    query_run_function = import_query_run_function()
-    if request.method == "GET":
-        location: str = request.args.get("location", type=str)
-
-        output_rows, mysql, cur = query_run_function(
-            f"SELECT vending_machine_id, name FROM vending_machine WHERE location = '{location}'"
-        )
-
-        if output_rows > 0:
-            products: MySQLdb.CursorStoreResultMixIn = cur.fetchall()
-            cur.close()
-            return jsonify(products)
-        return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)
-    else:
-        return jsonify(success=False, message=BAD_REQUEST_MESSAGE)
+    location: str = request.args.get("location", type=str)
+    query_statement: str = f"SELECT vending_machine_id, name " f"FROM vending_machine WHERE location = '{location}'"
+    return get_all_items(query_statement)
