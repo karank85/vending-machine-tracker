@@ -4,8 +4,6 @@ import MySQLdb
 from config.error_message import BAD_REQUEST_MESSAGE, NO_KEY_FOUND_MESSAGE
 from flask import Response, jsonify, request
 
-# from run_query import run_sql_script
-
 
 def import_query_run_function() -> Callable[[str], tuple[int, Any, Any]]:
     """Import run sql script function."""

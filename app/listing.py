@@ -1,16 +1,7 @@
-from typing import Any, Callable
-
 from api import create_item, delete_item, edit_item, get_all_items, get_unique_item
 from flask import Blueprint, Response, request
 
 listing_bp = Blueprint("listing", __name__, url_prefix="/")
-
-
-def import_query_run_function() -> Callable[[str], tuple[int, Any, Any]]:
-    """Import run sql script function."""
-    from app.run_query import run_sql_script
-
-    return run_sql_script
 
 
 @listing_bp.route("listing/all", methods=["GET"])

@@ -1,5 +1,5 @@
 from config.credentials import mysql_db, mysql_host, mysql_password, mysql_user
-from flask import Flask, render_template
+from flask import Flask
 from flask_mysqldb import MySQL
 from listing import listing_bp
 from products import product_bp
@@ -20,13 +20,6 @@ app.config["MYSQL_DB"] = mysql_db
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
-
-
-@app.route("/", endpoint="home")
-def index() -> str:
-    """Test template."""
-    return render_template("index.html")
-
 
 if __name__ == "__main__":
     app.run(debug=True)
