@@ -160,7 +160,6 @@ cython_debug/
 .idea/
 
 # cred.yaml
-cred.yaml
 
 poetry.lock
 
