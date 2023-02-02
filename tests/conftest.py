@@ -10,6 +10,11 @@ mysql_test_connection = MySQL()
 @pytest.fixture()
 def app_database():
     app = create_app(mysql_test_connection)
+    app.config.update(
+        {
+            "WTF_CSRF_CHECK_DEFAULT": False,
+        }
+    )
     yield app, mysql_test_connection
 
 

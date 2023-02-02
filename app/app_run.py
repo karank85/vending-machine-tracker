@@ -1,4 +1,5 @@
 import pymysql
+from flask_wtf import CSRFProtect
 
 pymysql.install_as_MySQLdb()
 from flask import Flask
@@ -15,6 +16,8 @@ from app.routes.vending_service import vending_service_bp
 def create_app(mysql_database: MySQL) -> Flask:
     """Start an instance of flask application."""
     app = Flask(__name__)
+    csrf = CSRFProtect()
+    csrf.init_app(app)
 
     app.register_blueprint(product_bp)
     app.register_blueprint(vending_bp)
