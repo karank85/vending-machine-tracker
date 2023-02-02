@@ -62,8 +62,8 @@ jobs:
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install dependencies
-        if: steps.poetry-cache.outputs.cache-hit != 'true'
-        run: poetry install
+        #if: steps.poetry-cache.outputs.cache-hit != 'true'
+        run: poetry install --no-root
 
       - name: Test with Pytest
         run: |
