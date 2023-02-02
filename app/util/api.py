@@ -1,7 +1,8 @@
-from config.error_message import NO_KEY_FOUND_MESSAGE
-from flask import Response, jsonify, request
+from flask import Response, jsonify
 from flask_mysqldb import MySQL
-from util.run_query import run_sql_script
+
+from app.config.error_message import NO_KEY_FOUND_MESSAGE
+from app.util.run_query import run_sql_script
 
 
 class API:
@@ -45,7 +46,6 @@ class API:
         mysql.connection.commit()
 
         cur.close()
-        request.method = "GET"
         return self.get_all_items(f"SELECT * FROM {self.model_type}")
 
     def create_item(self, query_statement: str) -> Response:
@@ -54,7 +54,6 @@ class API:
 
         mysql.connection.commit()
         cur.close()
-        request.method = "GET"
         return self.get_all_items(f"SELECT * FROM {self.model_type}")
 
     def edit_item(self, query_statement: str, condition: str) -> Response:
@@ -65,7 +64,6 @@ class API:
 
         if output > 0:
             cur.close()
-            request.method = "GET"
             return self.get_unique_item(condition)
         else:
             return jsonify(success=False, message=NO_KEY_FOUND_MESSAGE)

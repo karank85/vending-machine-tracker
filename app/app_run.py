@@ -1,14 +1,15 @@
 import pymysql
 
 pymysql.install_as_MySQLdb()
-from config.credentials import mysql_db, mysql_host, mysql_password, mysql_user
-from database import mysql
 from flask import Flask
 from flask_mysqldb import MySQL
-from routes.listing import listing_bp
-from routes.products import product_bp
-from routes.vending_machines import vending_bp
-from routes.vending_service import vending_service_bp
+
+from app.config.credentials import mysql_db, mysql_host, mysql_password, mysql_user
+from app.database import mysql
+from app.routes.listing import listing_bp
+from app.routes.products import product_bp
+from app.routes.vending_machines import vending_bp
+from app.routes.vending_service import vending_service_bp
 
 
 def create_app(mysql_database: MySQL) -> Flask:

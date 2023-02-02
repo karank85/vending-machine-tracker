@@ -1,26 +1,26 @@
 import random
 
-import requests
 from flask import Response
+from flask.testing import FlaskClient
 
 ENDPOINT = "http://127.0.0.1:5000/"
 
 
-def product_get_all() -> Response:
-    get_all_product_response = requests.get(ENDPOINT + "/product/all")
+def product_get_all(client: FlaskClient) -> Response:
+    get_all_product_response = client.get("/product/all")
 
     assert get_all_product_response.status_code == 200
 
-    return get_all_product_response.json()
+    return get_all_product_response.json
 
 
-def test_product_get_unique():
+def test_product_get_unique(client: FlaskClient):
     sample_param = {"id": "2"}
-    get_a_single_product = requests.get(ENDPOINT + "product", params=sample_param)
+    get_a_single_product = client.get("/product", query_string=sample_param)
 
     assert get_a_single_product.status_code == 200
 
-    json_response_got = get_a_single_product.json()
+    json_response_got = get_a_single_product.json
 
     product_id_got = json_response_got["product_id"]
     product_name_got = json_response_got["product_name"]
@@ -29,21 +29,21 @@ def test_product_get_unique():
     assert product_id_got == 2 and product_name_got == "coke" and price_got == 25
 
 
-def test_product_get_no_key_exist():
+def test_product_get_no_key_exist(client: FlaskClient):
     sample_fake_param = {"id": "9000"}
 
-    get_a_single_product = requests.get(ENDPOINT + "product", params=sample_fake_param)
+    get_a_single_product = client.get("/product", query_string=sample_fake_param)
 
     assert get_a_single_product.status_code == 200
 
-    json_response_got = get_a_single_product.json()
+    json_response_got = get_a_single_product.json
 
     response_status_got = json_response_got["success"]
 
     assert not response_status_got
 
 
-def test_edit_product():
+def test_edit_product(client: FlaskClient):
     random_price_to_set = random.randint(10, 100)
     random_name_to_set = [
         "apple",
@@ -59,11 +59,11 @@ def test_edit_product():
 
     sample_param = {"id": "5", "name": random_name_to_set, "price": random_price_to_set}
 
-    get_product_after_edit = requests.post(ENDPOINT + "/product/edit", params=sample_param)
+    get_product_after_edit = client.post("/product/edit", query_string=sample_param)
 
     assert get_product_after_edit.status_code == 200
 
-    json_response_after_edit = get_product_after_edit.json()
+    json_response_after_edit = get_product_after_edit.json
 
     price_after_edit = json_response_after_edit["price"]
     name_after_edit = json_response_after_edit["product_name"]
@@ -71,24 +71,24 @@ def test_edit_product():
     assert name_after_edit == random_name_to_set and random_price_to_set == price_after_edit
 
 
-def test_create_listing():
+def test_create_listing(client: FlaskClient):
     sample_param = {"name": "cheetos", "price": "80"}
-    get_product_after_creating = requests.post(ENDPOINT + "/product/create", params=sample_param)
+    get_product_after_creating = client.post("/product/create", query_string=sample_param)
 
     assert get_product_after_creating.status_code == 200
 
-    json_response_after_create = get_product_after_creating.json()
+    json_response_after_create = get_product_after_creating.json
 
-    assert product_get_all() == json_response_after_create
+    assert product_get_all(client) == json_response_after_create
 
 
-def test_delete_product():
+def test_delete_product(client: FlaskClient):
     sample_param = {"id": "6"}
 
-    get_listing_after_deleting = requests.post(ENDPOINT + "/product/delete", params=sample_param)
+    get_listing_after_deleting = client.post("/product/delete", query_string=sample_param)
 
     assert get_listing_after_deleting.status_code == 200
 
-    json_response_after_delete = get_listing_after_deleting.json()
+    json_response_after_delete = get_listing_after_deleting.json
 
-    assert product_get_all() == json_response_after_delete
+    assert product_get_all(client) == json_response_after_delete

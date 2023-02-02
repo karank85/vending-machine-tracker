@@ -1,6 +1,6 @@
 import yaml
 
-cred = yaml.load(open("../cred.yaml"), Loader=yaml.Loader)
+cred = yaml.load(open("cred.yaml"), Loader=yaml.Loader)
 
 mysql_host = cred["mysql_host"]
 mysql_user = cred["mysql_user"]
