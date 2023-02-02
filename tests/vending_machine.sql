@@ -2,14 +2,11 @@ create table products
 (
     product_name varchar(255) not null,
     price        int          not null,
-    product_id   int auto_increment
-        primary key
+    product_id   int auto_incrementprimary key
 );
-
 create table vending_machine
 (
-    vending_machine_id int auto_increment
-        primary key,
+    vending_machine_id int auto_incrementprimary key,
     location           varchar(255) not null,
     name               varchar(255) not null
 );

@@ -12,8 +12,10 @@ mysql_test_connection = MySQL()
 
 
 def create_table():
-    file = open("tests/vending_machine.txt", "r")
-    output, mysql, cur = run_sql_script(file.read().strip(), mysql_test_connection)
+    file = open("tests/vending_machine.sql", "r")
+
+    for fr in file.readlines():
+        output, mysql, cur = run_sql_script(fr, mysql_test_connection)
 
 
 @pytest.fixture()
