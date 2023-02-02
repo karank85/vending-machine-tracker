@@ -84,8 +84,8 @@ def test_create_listing(client: FlaskClient):
 
 def test_delete_product(client: FlaskClient):
 
-    sample_param = {"id": "6"}
+    sample_param_delete = {"id": "6"}
 
-    get_listing_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param)
+    get_listing_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param_delete)
 
     assert get_listing_after_deleting.status_code == 200
