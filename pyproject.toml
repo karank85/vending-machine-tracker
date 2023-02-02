@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["karank85 <kkjas85@gmail.com>"]
 readme = "README.md"
-packages = [{include = "vending_tracker"},{include = "config", from="src"},]
+packages = [{include = "vending_tracker"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
