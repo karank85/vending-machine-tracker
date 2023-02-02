@@ -1,9 +1,11 @@
 from flask import Response
 from flask.testing import FlaskClient
 
+ENDPOINT = "/listing"
+
 
 def listing_get_all(client: FlaskClient) -> Response:
-    get_all_listing_response = client.get("/listing/all")
+    get_all_listing_response = client.get(ENDPOINT + "/all")
 
     assert get_all_listing_response.status_code == 200
 
@@ -12,7 +14,7 @@ def listing_get_all(client: FlaskClient) -> Response:
 
 def test_listing_get_unique(client: FlaskClient):
     sample_param = {"product_id": "2", "vending_machine_id": "1"}
-    get_a_single_listing = client.get("/listing", query_string=sample_param)
+    get_a_single_listing = client.get(ENDPOINT, query_string=sample_param)
 
     assert get_a_single_listing.status_code == 200
 
@@ -27,7 +29,7 @@ def test_listing_get_unique(client: FlaskClient):
 
 def test_listing_get_no_key_exist(client: FlaskClient):
     sample_fake_param = {"product_id": "9000", "vending_machine_id": "1"}
-    get_a_single_listing = client.get("/listing", query_string=sample_fake_param)
+    get_a_single_listing = client.get(ENDPOINT, query_string=sample_fake_param)
 
     assert get_a_single_listing.status_code == 200
 
@@ -41,7 +43,7 @@ def test_listing_get_no_key_exist(client: FlaskClient):
 def test_simple_purchase_listing(client: FlaskClient):
     def get_before_quantity_listing() -> int:
         sample_param_listing = {"product_id": "4", "vending_machine_id": "1"}
-        get_a_single_listing = client.get("/listing", query_string=sample_param_listing)
+        get_a_single_listing = client.get(ENDPOINT, query_string=sample_param_listing)
 
         assert get_a_single_listing.status_code == 200
 
@@ -54,7 +56,7 @@ def test_simple_purchase_listing(client: FlaskClient):
     before_quantity = get_before_quantity_listing()
 
     sample_param = {"product_id": "4", "vending_machine_id": "1"}
-    get_listing_after_buy = client.post("/listing/buy", query_string=sample_param)
+    get_listing_after_buy = client.post(ENDPOINT + "/buy", query_string=sample_param)
 
     assert get_listing_after_buy.status_code == 200
 
@@ -74,7 +76,7 @@ def test_edit_listing(client: FlaskClient):
         "quantity": str(pre_quantity_to_set),
     }
 
-    get_listing_pre_edit = client.post("/listing/edit", query_string=sample_param_pre_edit)
+    get_listing_pre_edit = client.post(ENDPOINT + "/edit", query_string=sample_param_pre_edit)
 
     assert get_listing_pre_edit.status_code == 200
 
@@ -90,7 +92,7 @@ def test_edit_listing(client: FlaskClient):
         "quantity": str(after_quantity_to_set),
     }
 
-    get_listing_after_edit = client.post("/listing/edit", query_string=sample_param_after_edit)
+    get_listing_after_edit = client.post(ENDPOINT + "/edit", query_string=sample_param_after_edit)
 
     assert get_listing_after_edit.status_code == 200
 
@@ -104,7 +106,7 @@ def test_edit_listing(client: FlaskClient):
 def test_delete_listing(client: FlaskClient):
     sample_param = {"product_id": "4", "vending_machine_id": "4"}
 
-    get_listing_after_deleting = client.post("/listing/delete", query_string=sample_param)
+    get_listing_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param)
 
     assert get_listing_after_deleting.status_code == 200
 
@@ -114,7 +116,7 @@ def test_create_listing(client: FlaskClient):
     before_create_json = listing_get_all(client)
 
     sample_param = {"product_id": "4", "vending_machine_id": "4", "quantity": "5"}
-    get_listing_after_creating = client.post("/listing/create", query_string=sample_param)
+    get_listing_after_creating = client.post(ENDPOINT + "/create", query_string=sample_param)
 
     assert get_listing_after_creating.status_code == 200
 

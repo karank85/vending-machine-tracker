@@ -1,16 +1,18 @@
 from flask.testing import FlaskClient
 
+ENDPOINT = "/service"
+
 
 def test_service_vending_machine_stock(client: FlaskClient):
     sample_param = {"id": "2"}
-    get_all_vending_machine_stock_response = client.get("/service/machine-stock", query_string=sample_param)
+    get_all_vending_machine_stock_response = client.get(ENDPOINT + "/machine-stock", query_string=sample_param)
 
     assert get_all_vending_machine_stock_response.status_code == 200
 
 
 def test_service_vending_machine_location(client: FlaskClient):
     sample_param = {"location": "mlc"}
-    get_all_vending_machine_at_location_response = client.get("/service/location-machine", query_string=sample_param)
+    get_all_vending_machine_at_location_response = client.get(ENDPOINT + "/location-machine", query_string=sample_param)
 
     assert get_all_vending_machine_at_location_response.status_code == 200
 

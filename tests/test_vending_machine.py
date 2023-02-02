@@ -1,9 +1,11 @@
 from flask import Response
 from flask.testing import FlaskClient
 
+ENDPOINT = "/vending-machine"
+
 
 def vending_machine_get_all(client: FlaskClient) -> Response:
-    get_all_vending_machine_response = client.get("/vending-machine/all")
+    get_all_vending_machine_response = client.get(ENDPOINT + "/all")
 
     assert get_all_vending_machine_response.status_code == 200
 
@@ -12,7 +14,7 @@ def vending_machine_get_all(client: FlaskClient) -> Response:
 
 def test_vending_machine_get_unique(client: FlaskClient):
     sample_param = {"id": "2"}
-    get_a_single_product = client.get("/vending-machine", query_string=sample_param)
+    get_a_single_product = client.get(ENDPOINT, query_string=sample_param)
 
     assert get_a_single_product.status_code == 200
 
@@ -28,7 +30,7 @@ def test_vending_machine_get_unique(client: FlaskClient):
 def test_vending_machine_get_no_key_exist(client: FlaskClient):
     sample_fake_param = {"id": "9000"}
 
-    get_a_single_vending_machine_response = client.get("vending-machine", query_string=sample_fake_param)
+    get_a_single_vending_machine_response = client.get(ENDPOINT, query_string=sample_fake_param)
 
     assert get_a_single_vending_machine_response.status_code == 200
 
@@ -46,7 +48,7 @@ def test_edit_vending_machine(client: FlaskClient):
         "location": "panda express",
     }
 
-    get_vending_machine_pre_edit = client.post("/vending-machine/edit", query_string=sample_param_pre_edit)
+    get_vending_machine_pre_edit = client.post(ENDPOINT + "/edit", query_string=sample_param_pre_edit)
 
     assert get_vending_machine_pre_edit.status_code == 200
 
@@ -61,7 +63,7 @@ def test_edit_vending_machine(client: FlaskClient):
         "location": "mcdonald",
     }
 
-    get_vending_machine_after_edit = client.post("/vending-machine/edit", query_string=sample_param_after_edit)
+    get_vending_machine_after_edit = client.post(ENDPOINT + "/edit", query_string=sample_param_after_edit)
 
     assert get_vending_machine_after_edit.status_code == 200
 
@@ -76,7 +78,7 @@ def test_edit_vending_machine(client: FlaskClient):
 def test_delete_vending_machine(client: FlaskClient):
     sample_param = {"id": "5"}
 
-    get_listing_after_deleting = client.post("/vending-machine/delete", query_string=sample_param)
+    get_listing_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param)
 
     assert get_listing_after_deleting.status_code == 200
 
@@ -86,7 +88,7 @@ def test_create_vending_machine(client: FlaskClient):
     before_create_json = vending_machine_get_all(client)
 
     sample_param = {"name": "coolvending", "location": "mars"}
-    vending_machine_create_response = client.post("/vending-machine/create", query_string=sample_param)
+    vending_machine_create_response = client.post(ENDPOINT + "/create", query_string=sample_param)
 
     assert vending_machine_create_response.status_code == 200
 
