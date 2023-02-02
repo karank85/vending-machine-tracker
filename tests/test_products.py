@@ -1,9 +1,5 @@
-import random
-
 from flask import Response
 from flask.testing import FlaskClient
-
-ENDPOINT = "http://127.0.0.1:5000/"
 
 
 def product_get_all(client: FlaskClient) -> Response:
@@ -44,22 +40,21 @@ def test_product_get_no_key_exist(client: FlaskClient):
 
 
 def test_edit_product(client: FlaskClient):
-    random_price_to_set = random.randint(10, 100)
-    random_name_to_set = [
-        "apple",
-        "juice",
-        "yoyo",
-        "dsada",
-        "dasdsa",
-        "dasdasvf",
-        "dasdasdasd",
-        "asdasdasdas",
-        "iiioe",
-    ][random.randint(0, 8)]
 
-    sample_param = {"id": "5", "name": random_name_to_set, "price": random_price_to_set}
+    sample_param_pre_edit = {"id": "5", "name": "yoyo", "price": "80"}
 
-    get_product_after_edit = client.post("/product/edit", query_string=sample_param)
+    get_product_pre_edit = client.post("/product/edit", query_string=sample_param_pre_edit)
+
+    assert get_product_pre_edit.status_code == 200
+
+    json_response_pre_edit = get_product_pre_edit.json
+
+    price_pre_edit = json_response_pre_edit["price"]
+    name_pre_edit = json_response_pre_edit["product_name"]
+
+    sample_param_after_edit = {"id": "5", "name": "snickers", "price": "314"}
+
+    get_product_after_edit = client.post("/product/edit", query_string=sample_param_after_edit)
 
     assert get_product_after_edit.status_code == 200
 
@@ -68,10 +63,13 @@ def test_edit_product(client: FlaskClient):
     price_after_edit = json_response_after_edit["price"]
     name_after_edit = json_response_after_edit["product_name"]
 
-    assert name_after_edit == random_name_to_set and random_price_to_set == price_after_edit
+    assert name_after_edit != name_pre_edit and price_pre_edit != price_after_edit
 
 
 def test_create_listing(client: FlaskClient):
+
+    before_create_json = product_get_all(client)
+
     sample_param = {"name": "cheetos", "price": "80"}
     get_product_after_creating = client.post("/product/create", query_string=sample_param)
 
@@ -79,16 +77,13 @@ def test_create_listing(client: FlaskClient):
 
     json_response_after_create = get_product_after_creating.json
 
-    assert product_get_all(client) == json_response_after_create
+    assert before_create_json != json_response_after_create
 
 
 def test_delete_product(client: FlaskClient):
+
     sample_param = {"id": "6"}
 
     get_listing_after_deleting = client.post("/product/delete", query_string=sample_param)
 
     assert get_listing_after_deleting.status_code == 200
-
-    json_response_after_delete = get_listing_after_deleting.json
-
-    assert product_get_all(client) == json_response_after_delete

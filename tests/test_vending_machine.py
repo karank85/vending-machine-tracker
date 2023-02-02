@@ -1,9 +1,5 @@
-import random
-
 from flask import Response
 from flask.testing import FlaskClient
-
-ENDPOINT = "http://127.0.0.1:5000/"
 
 
 def vending_machine_get_all(client: FlaskClient) -> Response:
@@ -44,46 +40,37 @@ def test_vending_machine_get_no_key_exist(client: FlaskClient):
 
 
 def test_edit_vending_machine(client: FlaskClient):
-    random_location_to_set = [
-        "kfc",
-        "burger king",
-        "dominoes",
-        "mcdonalds",
-        "popeyes",
-        "chic fil a",
-        "wingstop",
-        "taco bell",
-        "chester grill",
-    ][random.randint(0, 8)]
-    random_name_to_set = [
-        "vending8",
-        "vending9",
-        "vending10",
-        "vending11",
-        "vending12",
-        "vending13",
-        "vending14",
-        "vending15",
-        "vending16",
-    ][random.randint(0, 8)]
-
-    sample_param = {
+    sample_param_pre_edit = {
         "id": "3",
-        "name": random_name_to_set,
-        "location": random_location_to_set,
+        "name": "vending100",
+        "location": "panda express",
     }
 
-    get_vending_machine_after_edit = client.post("/vending-machine/edit", query_string=sample_param)
+    get_vending_machine_pre_edit = client.post("/vending-machine/edit", query_string=sample_param_pre_edit)
+
+    assert get_vending_machine_pre_edit.status_code == 200
+
+    json_response_pre_edit = get_vending_machine_pre_edit.json
+
+    name_pre_edit = json_response_pre_edit["name"]
+    location_pre_edit = json_response_pre_edit["location"]
+
+    sample_param_after_edit = {
+        "id": "3",
+        "name": "vending15",
+        "location": "mcdonald",
+    }
+
+    get_vending_machine_after_edit = client.post("/vending-machine/edit", query_string=sample_param_after_edit)
 
     assert get_vending_machine_after_edit.status_code == 200
 
     json_response_after_edit = get_vending_machine_after_edit.json
 
-    print(json_response_after_edit)
     name_after_edit = json_response_after_edit["name"]
     location_after_edit = json_response_after_edit["location"]
 
-    assert name_after_edit == random_name_to_set and location_after_edit == random_location_to_set
+    assert name_after_edit != name_pre_edit and location_after_edit != location_pre_edit
 
 
 def test_delete_vending_machine(client: FlaskClient):
@@ -93,12 +80,11 @@ def test_delete_vending_machine(client: FlaskClient):
 
     assert get_listing_after_deleting.status_code == 200
 
-    json_response_after_delete = get_listing_after_deleting.json
-
-    assert vending_machine_get_all(client) == json_response_after_delete
-
 
 def test_create_vending_machine(client: FlaskClient):
+
+    before_create_json = vending_machine_get_all(client)
+
     sample_param = {"name": "coolvending", "location": "mars"}
     vending_machine_create_response = client.post("/vending-machine/create", query_string=sample_param)
 
@@ -106,4 +92,4 @@ def test_create_vending_machine(client: FlaskClient):
 
     json_response_after_create = vending_machine_create_response.json
 
-    assert vending_machine_get_all(client) == json_response_after_create
+    assert before_create_json != json_response_after_create

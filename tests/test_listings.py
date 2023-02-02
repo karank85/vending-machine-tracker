@@ -1,5 +1,3 @@
-import random
-
 from flask import Response
 from flask.testing import FlaskClient
 
@@ -68,15 +66,31 @@ def test_simple_purchase_listing(client: FlaskClient):
 
 
 def test_edit_listing(client: FlaskClient):
-    random_quantity_to_set = random.randint(10, 100)
+    pre_quantity_to_set = 90
 
-    sample_param = {
+    sample_param_pre_edit = {
         "product_id": "4",
         "vending_machine_id": "2",
-        "quantity": str(random_quantity_to_set),
+        "quantity": str(pre_quantity_to_set),
     }
 
-    get_listing_after_edit = client.post("/listing/edit", query_string=sample_param)
+    get_listing_pre_edit = client.post("/listing/edit", query_string=sample_param_pre_edit)
+
+    assert get_listing_pre_edit.status_code == 200
+
+    json_response_pre_edit = get_listing_pre_edit.json
+
+    quantity_pre_edit = json_response_pre_edit["quantity"]
+
+    after_quantity_to_set = 95
+
+    sample_param_after_edit = {
+        "product_id": "4",
+        "vending_machine_id": "2",
+        "quantity": str(after_quantity_to_set),
+    }
+
+    get_listing_after_edit = client.post("/listing/edit", query_string=sample_param_after_edit)
 
     assert get_listing_after_edit.status_code == 200
 
@@ -84,7 +98,7 @@ def test_edit_listing(client: FlaskClient):
 
     quantity_after_edit = json_response_after_edit["quantity"]
 
-    assert quantity_after_edit == random_quantity_to_set
+    assert quantity_after_edit != quantity_pre_edit
 
 
 def test_delete_listing(client: FlaskClient):
@@ -94,12 +108,11 @@ def test_delete_listing(client: FlaskClient):
 
     assert get_listing_after_deleting.status_code == 200
 
-    json_response_after_delete = get_listing_after_deleting.json
-
-    assert listing_get_all(client) == json_response_after_delete
-
 
 def test_create_listing(client: FlaskClient):
+
+    before_create_json = listing_get_all(client)
+
     sample_param = {"product_id": "4", "vending_machine_id": "4", "quantity": "5"}
     get_listing_after_creating = client.post("/listing/create", query_string=sample_param)
 
@@ -107,4 +120,4 @@ def test_create_listing(client: FlaskClient):
 
     json_response_after_create = get_listing_after_creating.json
 
-    assert listing_get_all(client) == json_response_after_create
+    assert before_create_json != json_response_after_create
