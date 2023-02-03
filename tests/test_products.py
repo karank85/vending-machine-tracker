@@ -24,7 +24,7 @@ def test_product_get_unique(client: FlaskClient):
     product_name_got = json_response_got["product_name"]
     price_got = json_response_got["price"]
 
-    assert product_id_got == 2 and product_name_got == "coke" and price_got == 25
+    assert product_id_got == 2 and product_name_got == "est" and price_got == 22
 
 
 def test_product_get_no_key_exist(client: FlaskClient):

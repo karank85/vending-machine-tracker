@@ -12,10 +12,17 @@ mysql_test_connection = MySQL()
 
 
 def create_table():
-    file = open("tests/vending_machine.sql", "r")
+    create_file_script = open("tests/scripts/vending_machine.sql", "r")
 
-    for fr in file.readlines():
-        output, mysql, cur = run_sql_script(fr, mysql_test_connection)
+    for create_table_script in create_file_script.readlines():
+        run_sql_script(create_table_script, mysql_test_connection)
+
+    create_file_script.close()
+
+    populate_data_script = open("tests/scripts/populate_data.sql", "r")
+
+    for data_script in populate_data_script.readlines():
+        run_sql_script(data_script, mysql_test_connection)
 
 
 @pytest.fixture()

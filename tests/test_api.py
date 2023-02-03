@@ -30,7 +30,7 @@ def test_get_unique_item(app_database: tuple[Flask, MySQL]):
         product_name_got = got_json["product_name"]
         price_got = got_json["price"]
 
-        assert product_id_got == 2 and product_name_got == "coke" and price_got == 25
+        assert product_id_got == 2 and product_name_got == "est" and price_got == 22
 
 
 #
