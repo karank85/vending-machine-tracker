@@ -45,7 +45,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Set up Docker
-        run: docker run --name mysqldb -e MYSQL_ROOT_PASSWORD=${{ secrets.ROOT_PASSWORD }} -e MYSQL_DATABASE=${{ secrets.DATABASE }} -d --restart=always mysql
+        run: docker run -p 3306:3306 --name mysqldb -e MYSQL_ROOT_PASSWORD=${{ secrets.ROOT_PASSWORD }} -e MYSQL_DATABASE=${{ secrets.DATABASE }} -d --restart=always mysql
       - name: docker ps test
         run: docker ps
       - name: Create yaml
