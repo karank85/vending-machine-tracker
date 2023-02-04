@@ -27,6 +27,19 @@ def test_vending_machine_get_unique(client: FlaskClient):
     assert vending_machine_id_got == 2 and vending_machine_name_got == "vending2" and location_got == "old building"
 
 
+def test_vending_machine_get_unique_wrong_arg(client: FlaskClient):
+    sample_param = {"bigboyvending": "2"}
+    get_a_single_vending_machine = client.get(ENDPOINT, query_string=sample_param)
+
+    assert get_a_single_vending_machine.status_code == 200
+
+    json_response_got = get_a_single_vending_machine.json
+
+    json_success_response = json_response_got["success"]
+
+    assert not json_success_response
+
+
 def test_vending_machine_get_no_key_exist(client: FlaskClient):
     sample_fake_param = {"id": "9000"}
 
@@ -78,13 +91,25 @@ def test_edit_vending_machine(client: FlaskClient):
 def test_delete_vending_machine(client: FlaskClient):
     sample_param = {"id": "5"}
 
-    get_listing_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param)
+    get_vending_machine_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param)
 
-    assert get_listing_after_deleting.status_code == 200
+    assert get_vending_machine_after_deleting.status_code == 200
+
+
+def test_delete_vending_machine_wrong_arg(client: FlaskClient):
+    sample_param_delete = {"imgonnadeletethis": "2"}
+    get_vending_machine_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param_delete)
+
+    assert get_vending_machine_after_deleting.status_code == 200
+
+    json_response_got = get_vending_machine_after_deleting.json
+
+    json_success_response = json_response_got["success"]
+
+    assert not json_success_response
 
 
 def test_create_vending_machine(client: FlaskClient):
-
     before_create_json = vending_machine_get_all(client)
 
     sample_param = {"name": "coolvending", "location": "mars"}

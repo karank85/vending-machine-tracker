@@ -17,46 +17,46 @@ def all_products() -> Response:
 @product_bp.route("/product", methods=["GET"])
 def product() -> Response:
     """Get a certain product from the database provided with the id."""
-    try:
-        product_id: str = request.args.get("id", type=str)
+    product_id: str = request.args.get("id", type=str)
+    if product_id is not None:
         return product_api.get_unique_item(f"product_id={product_id}")
-    except ValueError:
+    else:
         return jsonify(success=False, message="Arguments needed: [id]")
 
 
 @product_bp.route("/product/delete", methods=["POST"])
 def delete_product() -> Response:
     """Delete a product from the database."""
-    try:
-        product_id: str = request.args.get("id", type=str)
+    product_id: str = request.args.get("id", type=str)
+    if product_id is not None:
         query_statement = f"DELETE FROM products WHERE product_id = {product_id}"
         return product_api.delete_item(query_statement)
-    except ValueError:
+    else:
         return jsonify(success=False, message="Arguments needed: [id]")
 
 
 @product_bp.route("/product/create", methods=["POST"])
 def create_product() -> Response:
     """Create a new product and adding to the database with the name and price per unit."""
-    try:
-        name: str = request.args.get("name", type=str)
-        price: str = request.args.get("price", type=str)
+    name: str = request.args.get("name", type=str)
+    price: str = request.args.get("price", type=str)
+    if None not in [name, price]:
         query_statement = f"INSERT INTO products(product_name, price) VALUES('{name}',{price})"
         return product_api.create_item(query_statement)
-    except ValueError:
-        jsonify(success=False, message="Arguments needed: [name, price]")
+    else:
+        return jsonify(success=False, message="Arguments needed: [name, price]")
 
 
 @product_bp.route("/product/edit", methods=["POST"])
 def edit_product() -> Response:
     """List all the listings in the database in JSON format."""
-    try:
-        product_id: str = request.args.get("id", type=str)
-        name: str = request.args.get("name", type=str)
-        price: str = request.args.get("price", type=str)
+    product_id: str = request.args.get("id", type=str)
+    name: str = request.args.get("name", type=str)
+    price: str = request.args.get("price", type=str)
+    if None not in [product_id, name, price]:
         query_statement: str = (
             f"UPDATE products SET product_name = '{name}', price = {price} WHERE product_id={product_id}"
         )
         return product_api.edit_item(query_statement, f"product_id={product_id}")
-    except ValueError:
-        jsonify(success=False, message="Arguments needed: [id, name, price]")
+    else:
+        return jsonify(success=False, message="Arguments needed: [id, name, price]")

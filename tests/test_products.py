@@ -27,6 +27,19 @@ def test_product_get_unique(client: FlaskClient):
     assert product_id_got == 2 and product_name_got == "est" and price_got == 22
 
 
+def test_product_get_unique_wrong_arg(client: FlaskClient):
+    sample_param = {"woah": "2"}
+    get_a_single_product = client.get(ENDPOINT, query_string=sample_param)
+
+    assert get_a_single_product.status_code == 200
+
+    json_response_got = get_a_single_product.json
+
+    json_success_response = json_response_got["success"]
+
+    assert not json_success_response
+
+
 def test_product_get_no_key_exist(client: FlaskClient):
     sample_fake_param = {"id": "9000"}
 
@@ -42,7 +55,6 @@ def test_product_get_no_key_exist(client: FlaskClient):
 
 
 def test_edit_product(client: FlaskClient):
-
     sample_param_pre_edit = {"id": "5", "name": "yoyo", "price": "80"}
 
     get_product_pre_edit = client.post(ENDPOINT + "/edit", query_string=sample_param_pre_edit)
@@ -69,7 +81,6 @@ def test_edit_product(client: FlaskClient):
 
 
 def test_create_listing(client: FlaskClient):
-
     before_create_json = product_get_all(client)
 
     sample_param = {"name": "cheetos", "price": "80"}
@@ -83,9 +94,21 @@ def test_create_listing(client: FlaskClient):
 
 
 def test_delete_product(client: FlaskClient):
-
     sample_param_delete = {"id": "6"}
 
     get_listing_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param_delete)
 
     assert get_listing_after_deleting.status_code == 200
+
+
+def test_delete_product_wrong_arg(client: FlaskClient):
+    sample_param_delete = {"woah": "2"}
+    get_products_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param_delete)
+
+    assert get_products_after_deleting.status_code == 200
+
+    json_response_got = get_products_after_deleting.json
+
+    json_success_response = json_response_got["success"]
+
+    assert not json_success_response

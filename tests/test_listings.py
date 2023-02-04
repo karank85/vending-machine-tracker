@@ -27,7 +27,7 @@ def test_listing_get_unique(client: FlaskClient):
     assert product_id_got == 2 and vending_machine_got == 1 and quantity_got == 20
 
 
-def test_listing_get_no_key_exist(client: FlaskClient):
+def test_listing_get_unique_no_key_exist(client: FlaskClient):
     sample_fake_param = {"product_id": "9000", "vending_machine_id": "1"}
     get_a_single_listing = client.get(ENDPOINT, query_string=sample_fake_param)
 
@@ -38,6 +38,19 @@ def test_listing_get_no_key_exist(client: FlaskClient):
     response_status_got = json_response_got["success"]
 
     assert not response_status_got
+
+
+def test_listing_get_unique_wrong_arg(client: FlaskClient):
+    sample_param = {"product_id": "2", "karan": "1"}
+    get_a_single_listing = client.get(ENDPOINT, query_string=sample_param)
+
+    assert get_a_single_listing.status_code == 200
+
+    json_response_got = get_a_single_listing.json
+
+    json_success_response = json_response_got["success"]
+
+    assert not json_success_response
 
 
 def test_simple_purchase_listing(client: FlaskClient):
@@ -65,6 +78,19 @@ def test_simple_purchase_listing(client: FlaskClient):
     quantity_after_got = json_response_after_got["quantity"]
 
     assert before_quantity - quantity_after_got == 1
+
+
+def test_listing_simple_purchase_wrong_arg(client: FlaskClient):
+    sample_param = {"product_id": "2", "karan": "1"}
+    get_listing_after_buy = client.post(ENDPOINT + "/buy", query_string=sample_param)
+
+    assert get_listing_after_buy.status_code == 200
+
+    json_response_got = get_listing_after_buy.json
+
+    json_success_response = json_response_got["success"]
+
+    assert not json_success_response
 
 
 def test_edit_listing(client: FlaskClient):
@@ -112,7 +138,6 @@ def test_delete_listing(client: FlaskClient):
 
 
 def test_create_listing(client: FlaskClient):
-
     before_create_json = listing_get_all(client)
 
     sample_param = {"product_id": "4", "vending_machine_id": "4", "quantity": "5"}
