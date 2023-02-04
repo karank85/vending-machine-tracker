@@ -124,3 +124,22 @@ def test_edit_item(app_database: tuple[Flask, MySQL]):
         name_after_edit = json_response_after_edit["product_name"]
 
         assert name_after_edit != name_pre_edit and price_pre_edit != price_after_edit
+
+
+def test_edit_item_wrong_key(app_database: tuple[Flask, MySQL]):
+    app, database = app_database
+
+    query_statement: str = "UPDATE products SET product_name = 'apple', price = 50 WHERE product_id=600"
+
+    with app.app_context():
+        products_api = API("products", database)
+
+        get_product_edit_response = products_api.edit_item(query_statement, "product_id=5")
+
+        assert get_product_edit_response.status_code == 200
+
+        json_response = get_product_edit_response.json
+
+        json_response_success = json_response["success"]
+
+        assert not json_response_success
