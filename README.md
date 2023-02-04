@@ -140,7 +140,9 @@ GET 127.0.01:5000/service/location-machine?location={location}
 ```
 
 ## How to run
-`cd` into the `app` directory then run the follow command in your terminal: `python3 app_run.py`
+run the following command in your terminal: `python3 app_run.py`
+
+<b>Note:</b> Make sure you are in the right directory
 
 ## How to test
 

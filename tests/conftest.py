@@ -5,7 +5,7 @@ pymysql.install_as_MySQLdb()
 import pytest
 from flask import Flask
 from flask.testing import FlaskClient
-from app.app_run import create_app
+from app_run import create_app
 from flask_mysqldb import MySQL
 from app.util.run_query import run_sql_script
 
