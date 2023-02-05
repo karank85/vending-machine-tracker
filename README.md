@@ -1,5 +1,8 @@
 # Vending Machine Tracker API by: Karan Kumar 6380812
 
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=karank85_vending-machine-tracker&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=karank85_vending-machine-tracker)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=karank85_vending-machine-tracker&metric=coverage)](https://sonarcloud.io/summary/new_code?id=karank85_vending-machine-tracker)
+
 ## Requirements for running
 
 Run `poetry install` to make all the appropriate dependencies are downloaded
