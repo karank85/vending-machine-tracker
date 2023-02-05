@@ -1,0 +1,16 @@
+USE vending_tracker;
+INSERT INTO products(product_name, price) VALUES('coke',25);
+INSERT INTO products(product_name, price) VALUES('est',22);
+INSERT INTO products(product_name, price) VALUES('coke',30);
+INSERT INTO products(product_name, price) VALUES('snickers',314);
+INSERT INTO products(product_name, price) VALUES('cheetos',80);
+INSERT INTO vending_machine(location, name) VALUES('mlc','vending1');
+INSERT INTO vending_machine(location, name) VALUES('old building','vending2');
+INSERT INTO vending_machine(location, name) VALUES('mcdonald','vending15');
+INSERT INTO vending_machine(location, name) VALUES('music building','vending4');
+INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES(2,1,20);
+INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES(3,1,20);
+INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES(3,2,20);
+INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES(4,1,20);
+INSERT INTO listing(product_id, vending_machine_id, quantity) VALUES(4,2,95);
+COMMIT;
