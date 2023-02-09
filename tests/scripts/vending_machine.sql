@@ -7,3 +7,5 @@ drop table if exists vending_machine;
 create table vending_machine(vending_machine_id int auto_increment primary key,location varchar(255) not null, name varchar(255) not null);
 drop table if exists listing;
 create table listing(product_id int not null,vending_machine_id int not null,quantity int not null,primary key (product_id, vending_machine_id),constraint product_id foreign key (product_id) references products (product_id), constraint vending_machine_id foreign key (vending_machine_id) references vending_machine (vending_machine_id));
+drop table if exists purchase;
+create table if not exists purchase(purchase_id int auto_increment primary key, time_stamp datetime, vending_machine_id int NOT NULL,product_id int NOT NULL,quantity int,stock_state json,constraint fk_vending foreign key(vending_machine_id) references vending_machine(vending_machine_id),constraint fk_product foreign key(product_id) references products(product_id));

@@ -149,6 +149,9 @@ run the following command in your terminal: `python3 app_run.py`
 
 ## How to test
 
+1. Connect to your localhost in MySQL data source
+2. Create an empty schema with the name 'vending_tracker'
+
 Recommended software: `Postman`
 
 Send the correct request to each routes and with the correct parameters and values to get json output from each API
