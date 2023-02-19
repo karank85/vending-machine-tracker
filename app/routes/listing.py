@@ -2,6 +2,7 @@ from flask import Blueprint, Response, request, jsonify
 
 from app.database import mysql
 from app.util.api import API
+from app.routes.purchase import purchase_api
 
 listing_bp = Blueprint("listing", __name__, url_prefix="/")
 
@@ -37,6 +38,12 @@ def purchase_listing() -> Response:
         f"UPDATE listing SET quantity = quantity - 1 WHERE product_id = {product_id} "
         f"AND vending_machine_id = {vending_machine_id}"
     )
+    listing_response = listing_api.get_unique_item(
+        f"product_id = {product_id} AND " f"vending_machine_id = {vending_machine_id}"
+    )
+    listing_response_json = listing_response.json
+    quantity = listing_response_json["quantity"]
+    create_purchase(vending_machine_id, product_id, quantity - 1)
     return listing_api.edit_item(
         query_statement, f"product_id = {product_id} AND vending_machine_id = {vending_machine_id}"
     )
@@ -52,6 +59,7 @@ def delete_listing() -> Response:
     query_statement: str = (
         f"DELETE FROM listing WHERE product_id = {product_id} AND vending_machine_id = {vending_machine_id}"
     )
+    create_purchase(vending_machine_id, product_id, "0")
     return listing_api.delete_item(query_statement)
 
 
@@ -67,7 +75,9 @@ def create_listing() -> Response:
         f"INSERT INTO listing(product_id, vending_machine_id, quantity) "
         f"VALUES({product_id},{vending_machine_id},{quantity})"
     )
-    return listing_api.create_item(query_statement)
+    response = listing_api.create_item(query_statement)
+    create_purchase(vending_machine_id, product_id, quantity)
+    return response
 
 
 @listing_bp.route("/listing/edit", methods=["POST"])
@@ -83,6 +93,26 @@ def edit_listing() -> Response:
         f"quantity = {quantity} WHERE product_id = {product_id} "
         f"AND vending_machine_id = {vending_machine_id}"
     )
+    create_purchase(vending_machine_id, product_id, quantity)
     return listing_api.edit_item(
         query_statement, f"product_id = {product_id} AND vending_machine_id = {vending_machine_id}"
     )
+
+
+import json
+
+
+def create_purchase(vending_machine_id: str, product_id: str, quantity: str) -> None:
+    """Create a new purchase."""
+    if None in [vending_machine_id, product_id, quantity]:
+        return jsonify(success=False, message="Arguments needed: [vending_machine_id, product_id, quantity]")
+    stock_state_response = listing_api.get_all_items(
+        f"SELECT * FROM listing " f"WHERE vending_machine_id = {vending_machine_id}"
+    )
+    stock_state_response_json = stock_state_response.json
+    stock_state = json.dumps(stock_state_response_json)
+    query_statement = (
+        f"INSERT INTO purchase(time_stamp, vending_machine_id, product_id, quantity, stock_state) "
+        f"VALUES(now(),{vending_machine_id},{product_id},{quantity},'{stock_state}')"
+    )
+    purchase_api.create_item(query_statement)
