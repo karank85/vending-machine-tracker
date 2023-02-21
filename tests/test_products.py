@@ -31,7 +31,7 @@ def test_product_get_unique_wrong_arg(client: FlaskClient):
     sample_param = {"woah": "2"}
     get_a_single_product = client.get(ENDPOINT, query_string=sample_param)
 
-    assert get_a_single_product.status_code == 200
+    assert get_a_single_product.status_code == 400
 
     json_response_got = get_a_single_product.json
 
@@ -105,7 +105,7 @@ def test_delete_product_wrong_arg(client: FlaskClient):
     sample_param_delete = {"woah": "2"}
     get_products_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param_delete)
 
-    assert get_products_after_deleting.status_code == 200
+    assert get_products_after_deleting.status_code == 400
 
     json_response_got = get_products_after_deleting.json
 

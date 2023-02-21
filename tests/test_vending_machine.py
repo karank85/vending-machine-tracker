@@ -31,7 +31,7 @@ def test_vending_machine_get_unique_wrong_arg(client: FlaskClient):
     sample_param = {"bigboyvending": "2"}
     get_a_single_vending_machine = client.get(ENDPOINT, query_string=sample_param)
 
-    assert get_a_single_vending_machine.status_code == 200
+    assert get_a_single_vending_machine.status_code == 400
 
     json_response_got = get_a_single_vending_machine.json
 
@@ -100,7 +100,7 @@ def test_delete_vending_machine_wrong_arg(client: FlaskClient):
     sample_param_delete = {"imgonnadeletethis": "2"}
     get_vending_machine_after_deleting = client.post(ENDPOINT + "/delete", query_string=sample_param_delete)
 
-    assert get_vending_machine_after_deleting.status_code == 200
+    assert get_vending_machine_after_deleting.status_code == 400
 
     json_response_got = get_vending_machine_after_deleting.json
 
