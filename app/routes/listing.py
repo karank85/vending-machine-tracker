@@ -30,7 +30,7 @@ def listing() -> tuple[Response, int]:
 
 
 @listing_bp.route("/listing/buy", methods=["POST"])
-def purchase_listing() -> tuple[Response, int] | Response:
+def purchase_listing() -> tuple[Response, int]:
     """Purchase a certain listing by one."""
     vending_machine_id: str = request.args.get("vending_machine_id", type=str)
     product_id: str = request.args.get("product_id", type=str)
