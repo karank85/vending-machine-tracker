@@ -14,13 +14,13 @@ DEFAULT_LISTING_ARGS_MESSAGE = "Arguments needed: [vending_machine_id, product_i
 
 
 @listing_bp.route("listing/all", methods=["GET"])
-def all_listing() -> Response:
+def all_listing() -> tuple[Response, int]:
     """List all the listings in the database in JSON format."""
     return listing_api.get_all_items("SELECT * FROM listing")
 
 
 @listing_bp.route("/listing", methods=["GET"])
-def listing() -> tuple[Response, int] | Response:
+def listing() -> tuple[Response, int]:
     """Get a listing in the database in JSON format based on the vending machine and product."""
     vending_machine_id: str = request.args.get("vending_machine_id", type=str)
     product_id: str = request.args.get("product_id", type=str)
@@ -43,7 +43,7 @@ def purchase_listing() -> tuple[Response, int] | Response:
     listing_response = listing_api.get_unique_item(
         f"product_id = {product_id} AND " f"vending_machine_id = {vending_machine_id}"
     )
-    listing_response_json = listing_response.json
+    listing_response_json = listing_response[0].json
     quantity = listing_response_json["quantity"]
     create_purchase(vending_machine_id, product_id, quantity - 1)
     return listing_api.edit_item(
@@ -52,7 +52,7 @@ def purchase_listing() -> tuple[Response, int] | Response:
 
 
 @listing_bp.route("/listing/delete", methods=["POST"])
-def delete_listing() -> tuple[Response, int] | Response:
+def delete_listing() -> tuple[Response, int]:
     """Delete a listing from the database."""
     vending_machine_id: str = request.args.get("vending_machine_id", type=str)
     product_id: str = request.args.get("product_id", type=str)
@@ -66,7 +66,7 @@ def delete_listing() -> tuple[Response, int] | Response:
 
 
 @listing_bp.route("/listing/create", methods=["POST"])
-def create_listing() -> tuple[Response, int] | Response:
+def create_listing() -> tuple[Response, int]:
     """Create a new listing."""
     vending_machine_id: str = request.args.get("vending_machine_id", type=str)
     product_id: str = request.args.get("product_id", type=str)
@@ -83,7 +83,7 @@ def create_listing() -> tuple[Response, int] | Response:
 
 
 @listing_bp.route("/listing/edit", methods=["POST"])
-def edit_listing() -> tuple[Response, int] | Response:
+def edit_listing() -> tuple[Response, int]:
     """Edit a listing in the database."""
     vending_machine_id: str = request.args.get("vending_machine_id", type=str)
     product_id: str = request.args.get("product_id", type=str)
@@ -108,7 +108,7 @@ def create_purchase(vending_machine_id: str, product_id: str, quantity: str) -> 
     stock_state_response = listing_api.get_all_items(
         f"SELECT * FROM listing " f"WHERE vending_machine_id = {vending_machine_id}"
     )
-    stock_state_response_json = stock_state_response.json
+    stock_state_response_json = stock_state_response[0].json
     stock_state = json.dumps(stock_state_response_json)
     query_statement = (
         f"INSERT INTO purchase(time_stamp, vending_machine_id, product_id, quantity, stock_state) "

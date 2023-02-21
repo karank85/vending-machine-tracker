@@ -11,9 +11,9 @@ def test_all_items(app_database: tuple[Flask, MySQL]) -> Response:
         products_api = API("products", database)
         got = products_api.get_all_items("SELECT * FROM products")
 
-        assert got.status_code == 200
+        assert got[1] == 200
 
-        return got
+        return got[0]
 
 
 def test_get_unique_item(app_database: tuple[Flask, MySQL]):
@@ -23,8 +23,8 @@ def test_get_unique_item(app_database: tuple[Flask, MySQL]):
         products_api = API("products", database)
         got = products_api.get_unique_item(condition_sample_input)
 
-        assert got.status_code == 200
-        got_json = got.json
+        assert got[1] == 200
+        got_json = got[0].json
 
         product_id_got = got_json["product_id"]
         product_name_got = got_json["product_name"]
@@ -42,9 +42,9 @@ def test_get_unique_item_no_key(app_database: tuple[Flask, MySQL]):
         condition_sample_input: str = "product_id = 9000"
         got = products_api.get_unique_item(condition_sample_input)
 
-        assert got.status_code == 200
+        assert got[1] == 502
 
-        got_json = got.json
+        got_json = got[0].json
 
         response_status_got = got_json["success"]
 
@@ -64,7 +64,7 @@ def test_create_item(app_database: tuple[Flask, MySQL]):
 
         before_create_json = before_create.json
 
-        after_create_response = products_api.create_item(query_statement)
+        after_create_response = products_api.create_item(query_statement)[0]
 
         assert after_create_response.status_code == 200
 
@@ -85,7 +85,7 @@ def test_delete_item(app_database: tuple[Flask, MySQL]):
 
         query_statement = "DELETE FROM products ORDER BY product_id DESC LIMIT 1"
 
-        after_delete_response = products_api.delete_item(query_statement)
+        after_delete_response = products_api.delete_item(query_statement)[0]
 
         assert after_delete_response.status_code == 200
 
@@ -105,7 +105,7 @@ def test_edit_item(app_database: tuple[Flask, MySQL]):
     with app.app_context():
         products_api = API("products", database)
 
-        get_product_pre_edit_response = products_api.edit_item(query_statement, "product_id=5")
+        get_product_pre_edit_response = products_api.edit_item(query_statement, "product_id=5")[0]
 
         assert get_product_pre_edit_response.status_code == 200
 
@@ -114,7 +114,7 @@ def test_edit_item(app_database: tuple[Flask, MySQL]):
         price_pre_edit = json_response_pre_edit["price"]
         name_pre_edit = json_response_pre_edit["product_name"]
 
-        get_product_after_edit_response = products_api.edit_item(query_statement_revert_back, "product_id=5")
+        get_product_after_edit_response = products_api.edit_item(query_statement_revert_back, "product_id=5")[0]
 
         assert get_product_after_edit_response.status_code == 200
 
@@ -134,7 +134,7 @@ def test_edit_item_wrong_key(app_database: tuple[Flask, MySQL]):
     with app.app_context():
         products_api = API("products", database)
 
-        get_product_edit_response = products_api.edit_item(query_statement, "product_id=5")
+        get_product_edit_response = products_api.edit_item(query_statement, "product_id=5")[0]
 
         assert get_product_edit_response.status_code == 200
 

@@ -14,6 +14,7 @@ def insert_sample_listing(client: FlaskClient):
 
 
 def test_all_purchases(client: FlaskClient):
+    insert_sample_listing(client)
     get_all_purchases_response = client.get(ENDPOINT + "/all")
     assert get_all_purchases_response.status_code == 200
 
@@ -26,6 +27,7 @@ def test_purchases_by_vending_machine(client: FlaskClient, app_database: tuple[F
 
 
 def test_purchases_by_product(client: FlaskClient):
+    insert_sample_listing(client)
     sample_param = {"product_id": "1"}
     get_all_purchases_by_vending_machine_response = client.get(ENDPOINT + "/product", query_string=sample_param)
     assert get_all_purchases_by_vending_machine_response.status_code == 200

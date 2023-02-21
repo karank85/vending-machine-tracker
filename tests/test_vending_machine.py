@@ -45,7 +45,7 @@ def test_vending_machine_get_no_key_exist(client: FlaskClient):
 
     get_a_single_vending_machine_response = client.get(ENDPOINT, query_string=sample_fake_param)
 
-    assert get_a_single_vending_machine_response.status_code == 200
+    assert get_a_single_vending_machine_response.status_code == 502
 
     json_response_got = get_a_single_vending_machine_response.json
 

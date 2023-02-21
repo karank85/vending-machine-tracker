@@ -9,13 +9,13 @@ vending_machine_api = API("vending_machine", mysql)
 
 
 @vending_bp.route("/vending-machine/all", methods=["GET"])
-def all_vending_machines() -> Response:
+def all_vending_machines() -> tuple[Response, int]:
     """List all the vending machines in the database in JSON format."""
     return vending_machine_api.get_all_items("SELECT * FROM vending_machine")
 
 
 @vending_bp.route("/vending-machine", methods=["GET"])
-def vending_machine() -> Response | tuple[Response, int]:
+def vending_machine() -> tuple[Response, int]:
     """Get information about a certain vending machine provided with the ID."""
     vending_machine_id: str = request.args.get("id", type=str)
     if vending_machine_id is not None:
@@ -25,7 +25,7 @@ def vending_machine() -> Response | tuple[Response, int]:
 
 
 @vending_bp.route("/vending-machine/delete", methods=["POST"])
-def delete_vending_machine() -> Response | tuple[Response, int]:
+def delete_vending_machine() -> tuple[Response, int]:
     """Delete a vending machine from the database."""
     vending_machine_id: str = request.args.get("id", type=str)
     if vending_machine_id is not None:
@@ -36,7 +36,7 @@ def delete_vending_machine() -> Response | tuple[Response, int]:
 
 
 @vending_bp.route("/vending-machine/create", methods=["POST"])
-def create_vending_machine() -> Response | tuple[Response, int]:
+def create_vending_machine() -> tuple[Response, int]:
     """Create a new vending machine provided with the name and location."""
     name: str = request.args.get("name", type=str)
     location: str = request.args.get("location", type=str)
@@ -48,7 +48,7 @@ def create_vending_machine() -> Response | tuple[Response, int]:
 
 
 @vending_bp.route("/vending-machine/edit", methods=["POST"])
-def edit_vending_machine() -> Response | tuple[Response, int]:
+def edit_vending_machine() -> tuple[Response, int]:
     """Edit the vending machine information and update it into the database."""
     vending_machine_id: str = request.args.get("id", type=str)
     location: str = request.args.get("location", type=str)

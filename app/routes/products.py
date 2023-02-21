@@ -9,13 +9,13 @@ product_api = API("products", mysql)
 
 
 @product_bp.route("/product/all", methods=["GET"])
-def all_products() -> Response:
+def all_products() -> tuple[Response, int]:
     """Get all the products in the database."""
     return product_api.get_all_items("SELECT * FROM products")
 
 
 @product_bp.route("/product", methods=["GET"])
-def product() -> Response | tuple[Response, int]:
+def product() -> tuple[Response, int]:
     """Get a certain product from the database provided with the id."""
     product_id: str = request.args.get("id", type=str)
     if product_id is not None:
@@ -25,7 +25,7 @@ def product() -> Response | tuple[Response, int]:
 
 
 @product_bp.route("/product/delete", methods=["POST"])
-def delete_product() -> Response | tuple[Response, int]:
+def delete_product() -> tuple[Response, int]:
     """Delete a product from the database."""
     product_id: str = request.args.get("id", type=str)
     if product_id is not None:
@@ -36,7 +36,7 @@ def delete_product() -> Response | tuple[Response, int]:
 
 
 @product_bp.route("/product/create", methods=["POST"])
-def create_product() -> Response | tuple[Response, int]:
+def create_product() -> tuple[Response, int]:
     """Create a new product and adding to the database with the name and price per unit."""
     name: str = request.args.get("name", type=str)
     price: str = request.args.get("price", type=str)
@@ -48,7 +48,7 @@ def create_product() -> Response | tuple[Response, int]:
 
 
 @product_bp.route("/product/edit", methods=["POST"])
-def edit_product() -> Response | tuple[Response, int]:
+def edit_product() -> tuple[Response, int]:
     """List all the listings in the database in JSON format."""
     product_id: str = request.args.get("id", type=str)
     name: str = request.args.get("name", type=str)

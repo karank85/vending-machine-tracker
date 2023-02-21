@@ -7,7 +7,7 @@ vending_service_bp = Blueprint("vending_service", __name__, url_prefix="/")
 
 
 @vending_service_bp.route("/service/machine-stock", methods=["GET"])
-def vending_machine_stock() -> Response | tuple[Response, int]:
+def vending_machine_stock() -> tuple[Response, int]:
     """Get all the products provided by a vending machine."""
     listing_api: API = API("listing", mysql)
     vending_id: str = request.args.get("id", type=str)
@@ -19,7 +19,7 @@ def vending_machine_stock() -> Response | tuple[Response, int]:
 
 
 @vending_service_bp.route("/service/location-machine", methods=["GET"])
-def location_vending_machine() -> Response | tuple[Response, int]:
+def location_vending_machine() -> tuple[Response, int]:
     """Get all the vending machines installed at a location."""
     location: str = request.args.get("location", type=str)
     if location is not None:

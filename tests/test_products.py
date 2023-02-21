@@ -45,7 +45,7 @@ def test_product_get_no_key_exist(client: FlaskClient):
 
     get_a_single_product = client.get(ENDPOINT, query_string=sample_fake_param)
 
-    assert get_a_single_product.status_code == 200
+    assert get_a_single_product.status_code == 502
 
     json_response_got = get_a_single_product.json
 
