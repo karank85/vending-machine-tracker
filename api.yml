@@ -29,6 +29,12 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/Products"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
 
   /product?id={id}:
     get:
@@ -48,16 +54,21 @@ paths:
         "200":
           description: OK
           content:
-            application/json_success:
+            application/json:
               schema:
                 $ref: "#/components/schemas/Products"
-            application/json_fail_no_key:
+        "502":
+          description: Database Error
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/NoKeyFoundError"
-            application/json_fail_incorrect_args:
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/NoIDArgError"
-
 
   /product/delete?id={id}:
     post:
@@ -77,15 +88,22 @@ paths:
         "200":
           description: OK
           content:
-            application/json_success:
+            application/json:
               schema:
                 $ref: "#/components/schemas/Products"
-            application/json_fail_no_key:
+        "502":
+          description: Database Error
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/NoKeyFoundError"
-            application/json_fail_incorrect_args:
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
               schema:
                 $ref: "#/components/schemas/NoIDArgError"
+
   /product/create?name={name}&price={price}:
     post:
       tags:
@@ -113,6 +131,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Products"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoNamePriceArgError"
+
   /product/edit?id={id}&name={name}&price={price}:
     post:
       tags:
@@ -147,6 +172,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Products"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDNamePriceArgError"
   /listing/all:
     get:
       tags:
@@ -188,6 +219,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductArgError"
   /listing/buy?product_id={product_id}&vending_machine_id={vending_machine_id}:
     post:
       tags:
@@ -216,6 +253,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductArgError"
   /listing/delete?product_id={product_id}&vending_machine_id={vending_machine_id}:
     post:
       tags:
@@ -244,6 +287,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductArgError"
   /listing/create?product_id={product_id}&vending_machine_id={vending_machine_id}&quantity={quantity}:
     post:
       tags:
@@ -279,6 +328,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductQuantityArgError"
   /listing/edit?product_id={product_id}&vending_machine_id={vending_machine_id}&quantity={quantity}:
     post:
       tags:
@@ -314,6 +369,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductQuantityArgError"
   /vending-machine/all:
     get:
       tags:
@@ -327,6 +388,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
   /vending-machine?id={id}:
     get:
       tags:
@@ -348,6 +415,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDArgError"
   /vending-machine/delete?id={id}:
     post:
       tags:
@@ -369,6 +448,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDArgError"
   /vending-machine/create?name={name}&location={location}:
     post:
       tags:
@@ -396,6 +487,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoNameLocationArgError"
   /vending-machine/edit?id={id}&name={name}&location={location}:
     post:
       tags:
@@ -430,6 +527,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDNameLocationArgError"
   /service/machine-stock?id={vending_machine_id}:
     get:
       tags:
@@ -451,6 +554,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDArgError"
   /service/location-machine?location={location}:
     get:
       tags:
@@ -471,6 +586,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoLocationArgError"
   /purchase/all:
     get:
       tags:
@@ -484,6 +605,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Purchase"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
   /purchase/vending?{vending_machine_id}:
     get:
       tags:
@@ -497,6 +624,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Purchase"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
   /purchase/product?{product_id}:
     get:
       tags:
@@ -510,6 +643,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Purchase"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
 
 components:
   schemas:
@@ -585,6 +724,88 @@ components:
         success:
           type: boolean
           example: False
+    NoNamePriceArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [name,price]"
+        success:
+          type: boolean
+          example: False
+    NoIDNamePriceArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [id, name,price]"
+        success:
+          type: boolean
+          example: False
+    NoNameLocationArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [name,location]"
+        success:
+          type: boolean
+          example: False
+    NoIDNameLocationArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [id, location, name]"
+        success:
+          type: boolean
+          example: False
+    NoVendingAndProductArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [vending_machine_id, product_id]"
+        success:
+          type: boolean
+          example: False
+    NoVendingAndProductQuantityArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [vending_machine_id, product_id]"
+        success:
+          type: boolean
+          example: False
+    NoVendingPurchaseArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [vending_machine_id]"
+        success:
+          type: boolean
+          example: False
+    NoProductPurchaseArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [product_id]"
+        success:
+          type: boolean
+          example: False
+    NoLocationArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [location]"
+        success:
+          type: boolean
+          example: False
+
 
   securitySchemes:
     apiKey:
