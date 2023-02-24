@@ -11,6 +11,7 @@ listing_bp = Blueprint("listing", __name__, url_prefix="/")
 listing_api = API("listing", mysql)
 
 DEFAULT_LISTING_ARGS_MESSAGE = "Arguments needed: [vending_machine_id, product_id]"
+DEFAULT_AND_QUANTITY_LISTING_ARGS_MESSAGE = "Arguments needed: [vending_machine_id, product_id, quantity]"
 
 
 @listing_bp.route("listing/all", methods=["GET"])
@@ -72,7 +73,7 @@ def create_listing() -> tuple[Response, int]:
     product_id: str = request.args.get("product_id", type=str)
     quantity: str = request.args.get("quantity", type=str)
     if None in [vending_machine_id, product_id, quantity]:
-        return jsonify(success=False, message="Arguments needed: [vending_machine_id, product_id, quantity]"), 400
+        return jsonify(success=False, message=DEFAULT_AND_QUANTITY_LISTING_ARGS_MESSAGE), 400
     query_statement = (
         f"INSERT INTO listing(product_id, vending_machine_id, quantity) "
         f"VALUES({product_id},{vending_machine_id},{quantity})"
@@ -89,7 +90,7 @@ def edit_listing() -> tuple[Response, int]:
     product_id: str = request.args.get("product_id", type=str)
     quantity: str = request.args.get("quantity", type=str)
     if None in [product_id, vending_machine_id, quantity]:
-        return jsonify(success=False, message="Arguments needed: [vending_machine_id, product_id, quantity]"), 400
+        return jsonify(success=False, message=DEFAULT_LISTING_ARGS_MESSAGE), 400
     query_statement = (
         f"UPDATE listing SET product_id = {product_id}, vending_machine_id = {vending_machine_id}, "
         f"quantity = {quantity} WHERE product_id = {product_id} "
@@ -104,7 +105,7 @@ def edit_listing() -> tuple[Response, int]:
 def create_purchase(vending_machine_id: str, product_id: str, quantity: str) -> tuple[Response, int]:
     """Create a new purchase."""
     if None in [vending_machine_id, product_id, quantity]:
-        return jsonify(success=False, message="Arguments needed: [vending_machine_id, product_id, quantity]"), 400
+        return jsonify(success=False, message=DEFAULT_LISTING_ARGS_MESSAGE), 400
     stock_state_response = listing_api.get_all_items(
         f"SELECT * FROM listing " f"WHERE vending_machine_id = {vending_machine_id}"
     )
