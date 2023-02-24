@@ -163,8 +163,12 @@ Sample tests can be found in `tests/` to run those, use the command
 pytest
 ```
 
+## Example of Postman
+
+![postman](./static/postman.png)
 
 
-#### Example:
+## E-R Diagram:
 
-![er_diagram](/static/postman.png)
+
+![erdiagram](./static/erdiagram.png)
