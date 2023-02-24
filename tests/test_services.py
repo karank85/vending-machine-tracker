@@ -14,7 +14,7 @@ def test_service_vending_machine_stock_wrong_arg(client: FlaskClient):
     sample_param = {"gimme_stock": "2"}
     get_all_vending_machine_stock_response = client.get(ENDPOINT + "/machine-stock", query_string=sample_param)
 
-    assert get_all_vending_machine_stock_response.status_code == 200
+    assert get_all_vending_machine_stock_response.status_code == 400
 
     json_response_got = get_all_vending_machine_stock_response.json
 
@@ -41,7 +41,7 @@ def test_service_vending_machine_location_wrong_arg(client: FlaskClient):
     sample_param = {"random_location": "my_house"}
     get_all_vending_machine_at_location_response = client.get(ENDPOINT + "/machine-stock", query_string=sample_param)
 
-    assert get_all_vending_machine_at_location_response.status_code == 200
+    assert get_all_vending_machine_at_location_response.status_code == 400
 
     json_response_got = get_all_vending_machine_at_location_response.json
 

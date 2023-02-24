@@ -9,34 +9,34 @@ product_api = API("products", mysql)
 
 
 @product_bp.route("/product/all", methods=["GET"])
-def all_products() -> Response:
+def all_products() -> tuple[Response, int]:
     """Get all the products in the database."""
     return product_api.get_all_items("SELECT * FROM products")
 
 
 @product_bp.route("/product", methods=["GET"])
-def product() -> Response:
+def product() -> tuple[Response, int]:
     """Get a certain product from the database provided with the id."""
     product_id: str = request.args.get("id", type=str)
     if product_id is not None:
         return product_api.get_unique_item(f"product_id={product_id}")
     else:
-        return jsonify(success=False, message="Arguments needed: [id]")
+        return jsonify(success=False, message="Arguments needed: [id]"), 400
 
 
 @product_bp.route("/product/delete", methods=["POST"])
-def delete_product() -> Response:
+def delete_product() -> tuple[Response, int]:
     """Delete a product from the database."""
     product_id: str = request.args.get("id", type=str)
     if product_id is not None:
         query_statement = f"DELETE FROM products WHERE product_id = {product_id}"
         return product_api.delete_item(query_statement)
     else:
-        return jsonify(success=False, message="Arguments needed: [id]")
+        return jsonify(success=False, message="Arguments needed: [id]"), 400
 
 
 @product_bp.route("/product/create", methods=["POST"])
-def create_product() -> Response:
+def create_product() -> tuple[Response, int]:
     """Create a new product and adding to the database with the name and price per unit."""
     name: str = request.args.get("name", type=str)
     price: str = request.args.get("price", type=str)
@@ -44,11 +44,11 @@ def create_product() -> Response:
         query_statement = f"INSERT INTO products(product_name, price) VALUES('{name}',{price})"
         return product_api.create_item(query_statement)
     else:
-        return jsonify(success=False, message="Arguments needed: [name, price]")
+        return jsonify(success=False, message="Arguments needed: [name, price]"), 400
 
 
 @product_bp.route("/product/edit", methods=["POST"])
-def edit_product() -> Response:
+def edit_product() -> tuple[Response, int]:
     """List all the listings in the database in JSON format."""
     product_id: str = request.args.get("id", type=str)
     name: str = request.args.get("name", type=str)
@@ -59,4 +59,4 @@ def edit_product() -> Response:
         )
         return product_api.edit_item(query_statement, f"product_id={product_id}")
     else:
-        return jsonify(success=False, message="Arguments needed: [id, name, price]")
+        return jsonify(success=False, message="Arguments needed: [id, name, price]"), 400

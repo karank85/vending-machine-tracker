@@ -31,7 +31,7 @@ def test_listing_get_unique_no_key_exist(client: FlaskClient):
     sample_fake_param = {"product_id": "9000", "vending_machine_id": "1"}
     get_a_single_listing = client.get(ENDPOINT, query_string=sample_fake_param)
 
-    assert get_a_single_listing.status_code == 200
+    assert get_a_single_listing.status_code == 502
 
     json_response_got = get_a_single_listing.json
 
@@ -44,7 +44,7 @@ def test_listing_get_unique_wrong_arg(client: FlaskClient):
     sample_param = {"product_id": "2", "karan": "1"}
     get_a_single_listing = client.get(ENDPOINT, query_string=sample_param)
 
-    assert get_a_single_listing.status_code == 200
+    assert get_a_single_listing.status_code == 400
 
     json_response_got = get_a_single_listing.json
 
@@ -84,7 +84,7 @@ def test_listing_simple_purchase_wrong_arg(client: FlaskClient):
     sample_param = {"product_id": "2", "karan": "1"}
     get_listing_after_buy = client.post(ENDPOINT + "/buy", query_string=sample_param)
 
-    assert get_listing_after_buy.status_code == 200
+    assert get_listing_after_buy.status_code == 400
 
     json_response_got = get_listing_after_buy.json
 

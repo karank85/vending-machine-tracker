@@ -1,0 +1,814 @@
+openapi: "3.0.2"
+info:
+  title: Vending Machine APIs
+  version: "1.0"
+  description:
+    This is a Vending Machine server based on the OpenAPI 3.0 Specification.
+tags:
+  - name: Vending Machine
+    description: Everything you can do with vending machines
+  - name: Listing
+    description: Everything you can do with listings
+  - name: Products
+    description: Everything you can do with products
+  - name: Services
+    description: Every service you can do
+  - name: Purchase
+    description: Everything you can do purchases
+paths:
+  /product/all:
+    get:
+      tags:
+        - Products
+      summary: Get all products
+      description: Get all the products stored
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Products"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+
+  /product?id={id}:
+    get:
+      tags:
+        - Products
+      summary: Get a product based on the id
+      description: Get a product based on the product id given
+      parameters:
+        - name: product_id
+          in: query
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDArgError"
+
+  /product/delete?id={id}:
+    post:
+      tags:
+        - Products
+      summary: Delete a product based on the id
+      description: Delete a product based on the product id given
+      parameters:
+        - name: product_id
+          in: query
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDArgError"
+
+  /product/create?name={name}&price={price}:
+    post:
+      tags:
+        - Products
+      summary: Create a product
+      description: Create a product based on the product name and product price
+      parameters:
+        - name: product_name
+          in: query
+          description: Product Name
+          required: true
+          schema:
+            type: string
+        - name: price
+          in: query
+          description: Product Price
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoNamePriceArgError"
+
+  /product/edit?id={id}&name={name}&price={price}:
+    post:
+      tags:
+        - Products
+      summary: Edit a product
+      description: Edit a product based on the product id, product name and price
+      parameters:
+        - name: product_id
+          in: query
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: product_name
+          in: query
+          description: Product Name
+          required: true
+          schema:
+            type: string
+        - name: price
+          in: query
+          description: Product Price
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDNamePriceArgError"
+  /listing/all:
+    get:
+      tags:
+        - Listing
+      summary: Get all listings
+      description: Get all the listings stored
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+  /listing?product_id={product_id}&vending_machine_id={vending_machine_id}:
+    get:
+      tags:
+        - Listing
+      summary: Get a listing
+      description: Get a listing stored based on the vending machine id and product id
+      parameters:
+        - name: product_id
+          in: query
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: vending_machine_id
+          in: query
+          description: Vending Machine ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductArgError"
+  /listing/buy?product_id={product_id}&vending_machine_id={vending_machine_id}:
+    post:
+      tags:
+        - Listing
+      summary: Get a listing
+      description: Get a listing stored based on the vending machine id and product id
+      parameters:
+        - name: product_id
+          in: query
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: vending_machine_id
+          in: query
+          description: Vending Machine ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductArgError"
+  /listing/delete?product_id={product_id}&vending_machine_id={vending_machine_id}:
+    post:
+      tags:
+        - Listing
+      summary: Delete a listing
+      description: Delete a listing stored based on the vending machine id and product id
+      parameters:
+        - name: product_id
+          in: query
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: vending_machine_id
+          in: query
+          description: Vending Machine ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductArgError"
+  /listing/create?product_id={product_id}&vending_machine_id={vending_machine_id}&quantity={quantity}:
+    post:
+      tags:
+        - Listing
+      summary: Create a listing
+      description: Create a listing stored based on the vending machine id, product id and quantity
+      parameters:
+        - name: product_id
+          in: query
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: vending_machine_id
+          in: query
+          description: Vending Machine ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: quantity
+          in: query
+          description: Quantity
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductQuantityArgError"
+  /listing/edit?product_id={product_id}&vending_machine_id={vending_machine_id}&quantity={quantity}:
+    post:
+      tags:
+        - Listing
+      summary: Edit a listing
+      description: Edit a listing stored based on the vending machine id, product id and quantity
+      parameters:
+        - name: product_id
+          in: query
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: vending_machine_id
+          in: query
+          description: Vending Machine ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: quantity
+          in: query
+          description: Quantity
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoVendingAndProductQuantityArgError"
+  /vending-machine/all:
+    get:
+      tags:
+        - Vending Machine
+      summary: Get all vending machines
+      description: Get all the vending machines stored
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+  /vending-machine?id={id}:
+    get:
+      tags:
+        - Vending Machine
+      summary: Get a vending machine based on the id
+      description: Get a vending machine based on the product id given
+      parameters:
+        - name: vending_machine_id
+          in: query
+          description: Vending Machine ID
+          required: true
+          schema:
+            type: integer
+            default: 1
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDArgError"
+  /vending-machine/delete?id={id}:
+    post:
+      tags:
+        - Vending Machine
+      summary: Delete a vending machine
+      description: Delete a vending machine stored based on the vending machine id
+      parameters:
+        - name: vending_machine_id
+          in: query
+          description: Vending Machine ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDArgError"
+  /vending-machine/create?name={name}&location={location}:
+    post:
+      tags:
+        - Vending Machine
+      summary: Create a vending machine
+      description: Create a vending machine stored based on the name and location
+      parameters:
+        - name: name
+          in: query
+          description: Vending Machine Name
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: location
+          in: query
+          description: Vending Machine Location
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoNameLocationArgError"
+  /vending-machine/edit?id={id}&name={name}&location={location}:
+    post:
+      tags:
+        - Vending Machine
+      summary: Edit a vending machine
+      description: Edit a vending machine
+      parameters:
+        - name: vending_machine_id
+          in: query
+          description: Vending Machine ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: name
+          in: query
+          description: Vending Machine Name
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: location
+          in: query
+          description: Location
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDNameLocationArgError"
+  /service/machine-stock?id={vending_machine_id}:
+    get:
+      tags:
+        - Services
+      summary: Get products from a vending machine
+      description: Get all the products that is being sold in a certain vending machine
+      parameters:
+        - name: vending_machine_id
+          in: query
+          description: Vending Machine ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+        "400":
+          description: "Argument missing"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoIDArgError"
+  /service/location-machine?location={location}:
+    get:
+      tags:
+        - Services
+      summary: Get all vending machines in a location
+      description: Get all the vending machines installed in a certain location
+      parameters:
+        - name: location
+          in: query
+          description: Vending Machine Location
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VendingMachine"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoLocationArgError"
+  /purchase/all:
+    get:
+      tags:
+        - Purchase
+      summary: Get all purchase logs
+      description: Get all the purchases log stored
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Purchase"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+  /purchase/vending?{vending_machine_id}:
+    get:
+      tags:
+        - Purchase
+      summary: Get all purchase logs from vending machine
+      description: Get all the purchases log stored based from vending id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Purchase"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+  /purchase/product?{product_id}:
+    get:
+      tags:
+        - Purchase
+      summary: Get all purchase logs from product
+      description: Get all the purchases log stored from product id
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Purchase"
+        "502":
+          description: Database Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NoKeyFoundError"
+
+components:
+  schemas:
+    Products:
+      type: object
+      $ref: "#/components/schemas/Products"
+      properties:
+        product_id:
+          type: integer
+          example: 1
+        product_name:
+          type: string
+          example: "cocacola"
+        price:
+          type: integer
+          example: 20
+    VendingMachine:
+      type: object
+      $ref: "#/components/schemas/VendingMachine"
+      properties:
+        vending_machine_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "vending1"
+        location:
+          type: string
+          example: "MLC"
+    Listing:
+      type: object
+      properties:
+        vending_machine_id:
+          type: integer
+          example: 1
+        listing_id:
+          type: integer
+          example: 1
+        quantity:
+          type: integer
+          example: 20
+    Purchase:
+      type: object
+      properties:
+        purchase_id:
+          type: integer
+          example: 1
+        vending_machine_id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        time_stamp:
+          type: string
+          format: date-time
+          example: "Wed, 08 Feb 2023 21:40:52 GMT"
+    NoKeyFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "no key found"
+        success:
+          type: boolean
+          example: False
+    NoIDArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [id]"
+        success:
+          type: boolean
+          example: False
+    NoNamePriceArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [name,price]"
+        success:
+          type: boolean
+          example: False
+    NoIDNamePriceArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [id, name,price]"
+        success:
+          type: boolean
+          example: False
+    NoNameLocationArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [name,location]"
+        success:
+          type: boolean
+          example: False
+    NoIDNameLocationArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [id, location, name]"
+        success:
+          type: boolean
+          example: False
+    NoVendingAndProductArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [vending_machine_id, product_id]"
+        success:
+          type: boolean
+          example: False
+    NoVendingAndProductQuantityArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [vending_machine_id, product_id]"
+        success:
+          type: boolean
+          example: False
+    NoVendingPurchaseArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [vending_machine_id]"
+        success:
+          type: boolean
+          example: False
+    NoProductPurchaseArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [product_id]"
+        success:
+          type: boolean
+          example: False
+    NoLocationArgError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Arguments needed: [location]"
+        success:
+          type: boolean
+          example: False
+
+
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: X-API-KEY
+      in: header
